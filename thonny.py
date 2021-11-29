@@ -1,12 +1,12 @@
 n = 7
 a = 3*n
-print(a)
+#print(a)
 
 # mida iganes = 7
 a = 3*n
-print(n+8)
+#print(n+8)
 
-print("Hello world")
+#print("Hello world")
 
 a = 5
 b = 3
