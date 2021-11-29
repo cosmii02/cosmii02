@@ -31,3 +31,11 @@ if (a == b) :
     print (a)
 else:
     print(a+b)
+
+a = 5
+b = 3
+a = 2
+if (a < b) :
+    print (a*4)
+else:
+    print(b)
