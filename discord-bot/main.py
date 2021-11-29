@@ -1,17 +1,22 @@
 import discord
-from discord import guild
-from discord_slash import SlashCommand, SlashContext
-from discord_slash.utils.manage_commands import create_choice, create_option
+from nextcord.ext import commands
 
-slash = SlashCommand(client, sync_commands=True)
-token = "OTE0ODg4NTgxOTU5NTQ4OTM4.YaTmYw.z9TjIGA7k4NqoQMPdMFiz5h8MYI"
+bot = commands.Bot(command_prefix=';')
 
-@slash.slash(
-    name="hello",
-    description="Just sends a message which is below",
-    guild_ids=[884726121982222409]
-)
-async def _hello(ctx:SlashContext):
-    await ctx.send("Hello there, what's up")
+@bot.command()
+async def hello(ctx):
+    await ctx.reply('Hello')
 
-client.run(token)
+@bot.command()
+async def add(ctx, num1:int, num2:int):
+    await ctx.reply(num1+num2)
+
+@bot.command()
+async def minus(ctx, num1:int, num2:int):
+    await ctx.reply(num1-num2)
+
+@bot.command()
+async def multi(ctx, num1:int, num2:int):
+    await ctx.reply(num1*num2)
+
+bot.run('OTE0ODg4NTgxOTU5NTQ4OTM4.YaTmYw.z9TjIGA7k4NqoQMPdMFiz5h8MYI')
