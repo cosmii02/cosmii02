@@ -55,3 +55,5 @@ string on jutt või sõna (tekstiandme tüüp)
 '''
 
 # print ("Tere, maailm!")
+# Algoritm mat, on infolahenduseeskiri (Mõlemi osapoole poolt arusaadav juhend millegi jaoks)
+# Algoritmil on alati 1 algus ja 1 lõpp
