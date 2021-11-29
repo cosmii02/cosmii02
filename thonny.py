@@ -11,7 +11,23 @@ a = 3*n
 a = 5
 b = 3
 a = 2
+if (a < b) :
+    print (a)
+else:
+    print(b)
+
+a = 5
+b = 3
+a = 2
 if (a > b) :
     print (a)
 else:
     print(b)
+
+a = 5
+b = 3
+a = 2
+if (a == b) :
+    print (a)
+else:
+    print(a+b)

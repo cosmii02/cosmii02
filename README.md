@@ -1,5 +1,2 @@
-- 👋 Hi, I’m @cosmii02
-- 👀 I’m interested in making games on unity and watching anime
-- 🌱 I’m currently learning to be a unity developer
-- 💞️ I’m looking to collaborate on uhh... Genshin Impact? Yes I play that game a lot :)
-- 📫 How to reach me. My discord is Cosmii02#0002
+Siin asuvad minu kooli tööd :)
+Discordis: Cosmii02#0002
