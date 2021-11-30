@@ -67,5 +67,19 @@ print(b+c)
 c=(5.4*2)
 print(c)
 '''
+'''
 x=int(5.4*2)
 print(x)
+'''
+
+a=6
+b=8
+c=2
+if (a > b) and (a > c):
+   largest = a
+elif (b > a) and (b > c):
+   largest = b
+else:
+   largest = c
+print("Suurim arv on", largest)
+# Võrdleb a ja b ning siis a ja c, siis teises reas elif võrdleb b ja a ja siis b ja c. Ning siis prindib suurima arvu

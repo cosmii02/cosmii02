@@ -11,3 +11,7 @@ tehe2=6+3/(4-2)*4
 print(tehe2)
 # Teeb teise matemaatilise tehte ja prindib tolle
 
+c=4
+r=c/(2*pi)
+d=r*2
+print(d)
