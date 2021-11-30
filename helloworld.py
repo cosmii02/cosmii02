@@ -1,3 +1,4 @@
+from math import pi
 # Kommentaar jee
 n = 7
 a = 3*n
@@ -57,4 +58,14 @@ string on jutt või sõna (tekstiandme tüüp)
 # print ("Tere, maailm!")
 # Algoritm mat, on infolahenduseeskiri (Mõlemi osapoole poolt arusaadav juhend millegi jaoks)
 # Algoritmil on alati 1 algus ja 1 lõpp
-#test2
+'''
+b=2.5
+c=2
+print(b+c)
+'''
+'''
+c=(5.4*2)
+print(c)
+'''
+x=int(5.4*2)
+print(x)
