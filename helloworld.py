@@ -90,7 +90,7 @@ print("Suurim arv on", largest)
 nums=(1,2,3)
 print("Suurim arv on", max(nums))
 '''
-
+'''
 today='paaris'
 if today=='paaris':
     print("Pargi vasakule poole")
@@ -98,4 +98,13 @@ elif today=='paaritu':
     print("Pargi paremale poole")
 else:
     print("Täna on koristuspäev ja parkida ei saa")
-# Vaatab mis today on ja prindib vastava vastuse
+# Halvem versioon sellest
+'''
+num = int(input("Mis päev täna on?: "))
+if (num % 2) == 0:
+   print("Pargi vasakule poole".format(num))
+elif num==1:
+    print('Täna on koristuspäev ja parkida ei saa')
+else:
+   print("Pargi paremale poole".format(num))
+# Matemaatiliselt parem lahendus
