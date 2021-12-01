@@ -1,2 +1,2 @@
-Siin asuvad minu kooli tööd :)
+Insert python here :)
 Discordis: Cosmii02#0002
