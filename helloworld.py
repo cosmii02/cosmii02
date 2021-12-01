@@ -1,4 +1,5 @@
 from math import pi
+import math
 
 from discord.ext.commands.errors import PartialEmojiConversionFailure
 # Kommentaar jee
@@ -100,6 +101,7 @@ else:
     print("Täna on koristuspäev ja parkida ei saa")
 # Halvem versioon sellest
 '''
+'''
 num = int(input("Mis päev täna on?: "))
 if (num % 2) == 0:
    print("Pargi vasakule poole".format(num))
@@ -107,4 +109,16 @@ elif num==1:
     print('Täna on koristuspäev ja parkida ei saa')
 else:
    print("Pargi paremale poole".format(num))
+'''
 # Matemaatiliselt parem lahendus
+'''
+_thonny='trash'
+print(_thonny)
+'''
+'''
+suur='trash'
+print(suur)
+'''
+'''
+print(int(math.ceil(4.2)))
+'''
