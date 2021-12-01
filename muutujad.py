@@ -28,3 +28,6 @@ lause=(aasta+lause_keskosa+president)
 print(lause)
 
 #ul 1.3
+taisarv = int(input("Täisarv: "))
+astendaja = int(input("Astendaja: "))
+print(taisarv**astendaja)
