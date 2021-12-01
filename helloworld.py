@@ -98,3 +98,4 @@ elif today=='paaritu':
     print("Pargi paremale poole")
 else:
     print("Täna on koristuspäev ja parkida ei saa")
+# Vaatab mis today on ja prindib vastava vastuse
