@@ -1,5 +1,5 @@
 from math import pi
-'''
+
 print('Tere, kenneth')
 # Prindib tervituse kennethile
 
@@ -12,12 +12,17 @@ tehe2=6+3/(4-2)*4
 print(tehe2)
 # Teeb teise matemaatilise tehte ja prindib tolle
 
-c=4
+c=12
 r=c/(2*pi)
 d=r*2
 print(d)
 # Arvutab puu labimoodu
-'''
+
+# maa myntidega jne
+pin=255592966.26
+cc=53.79
+print(pin/cc)
+
 
 ##########################################################################
 #ul 1.2
