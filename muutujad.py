@@ -15,3 +15,4 @@ c=4
 r=c/(2*pi)
 d=r*2
 print(d)
+# Arvutab puu labimoodu

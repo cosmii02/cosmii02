@@ -1,4 +1,6 @@
 from math import pi
+
+from discord.ext.commands.errors import PartialEmojiConversionFailure
 # Kommentaar jee
 n = 7
 a = 3*n
@@ -71,8 +73,8 @@ print(c)
 x=int(5.4*2)
 print(x)
 '''
-
-a=6
+'''
+a=3
 b=8
 c=2
 if (a > b) and (a > c):
@@ -83,3 +85,16 @@ else:
    largest = c
 print("Suurim arv on", largest)
 # Võrdleb a ja b ning siis a ja c, siis teises reas elif võrdleb b ja a ja siis b ja c. Ning siis prindib suurima arvu
+'''
+'''
+nums=(1,2,3)
+print("Suurim arv on", max(nums))
+'''
+
+today='paaris'
+if today=='paaris':
+    print("Pargi vasakule poole")
+elif today=='paaritu':
+    print("Pargi paremale poole")
+else:
+    print("Täna on koristuspäev ja parkida ei saa")
