@@ -1,7 +1,6 @@
 from math import pi
 import math
 
-from discord.ext.commands.errors import PartialEmojiConversionFailure
 # Kommentaar jee
 n = 7
 a = 3*n
@@ -125,3 +124,9 @@ print(int(math.ceil(4.2)))
 max=2,3,4,5,6,7,8
 #annab teada mis on suurim arv jadas
 '''
+
+muutuja1=3.14
+muutuja1==3
+print(muutuja1 == 3)
+
+"Tere" != 'Tere'
