@@ -26,10 +26,10 @@ print(pin/cc)
 
 ##########################################################################
 #ul 1.2
-aasta='2016. '
+aasta=int(2016) 
 president='Kersti Kaljulaid'
-lause_keskosa='Aastal valiti Eesti presidendiks '
-lause=(aasta+lause_keskosa+president)
+lause_keskosa='. Aastal valiti Eesti presidendiks '
+lause=(str(aasta)+lause_keskosa+president)
 print(lause)
 
 #ul 1.3
