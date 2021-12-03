@@ -121,4 +121,9 @@ print(suur)
 '''
 '''
 print(int(math.ceil(4.2)))
+
+max=2,3,4,5,6,7,8
+#annab teada mis on suurim arv jadas
+
+
 '''
