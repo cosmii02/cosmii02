@@ -1,5 +1,5 @@
 from math import pi
-
+import math
 print('Tere, kenneth')
 # Prindib tervituse kennethile
 
@@ -21,8 +21,9 @@ print(d)
 # maa myntidega jne
 pin=255592966.26
 cc=53.79
-print(pin/cc)
-
+ccp=(pin/cc)
+ccr=round(ccp)
+print(ccr)
 
 ##########################################################################
 #ul 1.2
@@ -33,6 +34,6 @@ lause=(str(aasta)+lause_keskosa+president)
 print(lause)
 
 #ul 1.3
-taisarv = int(input("Täisarv: "))
-astendaja = int(input("Astendaja: "))
+taisarv=int(input("Täisarv: "))
+astendaja=int(input("Astendaja: "))
 print(taisarv**astendaja)
