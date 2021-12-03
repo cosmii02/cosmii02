@@ -130,3 +130,7 @@ muutuja1==3
 print(muutuja1 == 3)
 
 "Tere" != 'Tere'
+
+muutuja=9
+if muutuja > 8:
+    print("muutuja on suurem kui 8")
