@@ -1,2 +1,2 @@
 Insert python here :)
-Discordis: Cosmii02#0002
+Discord: Cosmii02#0002
