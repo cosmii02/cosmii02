@@ -7,7 +7,7 @@ else:
     print ("On jäätumise oht")
 '''
 #Ül 2.3
-###
+'''
 nimi = input("Sisesta oma perenimi: ")
 if nimi.endswith('ne'):
     print ("Abielus")
@@ -17,11 +17,26 @@ elif nimi.endswith("e"):
     print ("Määramata")
 else:
     print ("Pole ilmselt leedulanna perenimi")
-###
+'''
 
 #Ül 2.4c
 ###
+#inimesed=int(input("Sisesta inimeste arv: "))
+#kohad= int(input("Sisesta kohtade arv: "))
+peop = int(input("Inimeste arv: "))
+bus  = int(input("Kohtade arv: "))
 
+div  = round(peop / bus)
+
+if (div <= 0) :
+    print("busside arv: " + str(1))
+else:
+    print("palju busse vaja: " + str(div))
+cal = round(peop % bus)
+if (cal == 0):
+    print("Viimases bussis olevate inimeste arv: " + str(bus))
+else:
+    print("Viimases bussis olevate inimeste arv: " + str(cal))
 ###
 
 #if on kui, elif on juhul, else on siis
