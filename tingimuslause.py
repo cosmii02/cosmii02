@@ -20,7 +20,7 @@ else:
 '''
 
 #Ül 2.4c
-###
+'''
 peop = int(input("Inimeste arv: "))
 bus  = int(input("Kohtade arv: "))
 
@@ -35,7 +35,7 @@ if (cal == 0):
     print("Viimases bussis olevate inimeste arv: " + str(bus))
 else:
     print("Viimases bussis olevate inimeste arv: " + str(cal))
-###
+'''
 
 #if on kui, elif on juhul, else on siis
 #if avaldis on: käsud, mis täidetakse, kui avaldis on tõene
