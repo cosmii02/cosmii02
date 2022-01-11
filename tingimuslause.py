@@ -21,8 +21,6 @@ else:
 
 #Ül 2.4c
 ###
-#inimesed=int(input("Sisesta inimeste arv: "))
-#kohad= int(input("Sisesta kohtade arv: "))
 peop = int(input("Inimeste arv: "))
 bus  = int(input("Kohtade arv: "))
 
