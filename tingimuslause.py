@@ -19,6 +19,11 @@ else:
     print ("Pole ilmselt leedulanna perenimi")
 ###
 
+#Ül 2.4c
+###
+
+###
+
 #if on kui, elif on juhul, else on siis
 #if avaldis on: käsud, mis täidetakse, kui avaldis on tõene
 #if avaldis on: mis täidetakse, kui avaldis_1 on tõene
