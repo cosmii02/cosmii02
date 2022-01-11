@@ -8,7 +8,15 @@ else:
 '''
 #Ül 2.3
 ###
-
+nimi = input("Sisesta oma perenimi: ")
+if nimi.endswith('ne'):
+    print ("Abielus")
+elif nimi.endswith("te"):
+    print ("Vallaline")
+elif nimi.endswith("e"):
+    print ("Määramata")
+else:
+    print ("Pole ilmselt leedulanna perenimi")
 ###
 
 #if on kui, elif on juhul, else on siis
