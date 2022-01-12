@@ -37,6 +37,19 @@ else:
     print("Viimases bussis olevate inimeste arv: " + str(cal))
 '''
 
+'''
+controlnum=0
+suurus=float(input("Sisestage kirja suurus: "))
+teema=str(input("Sisestage kirja teema pealkiri: "))
+vastus=str(input("Kas kirjaga on kaasas fail? "))
+if teema != "":
+    controlnum+1
+if vastus == 'jah':
+    controlnum+1
+'''
+#Antud asja polnud vaja edasi teha
+
+
 #if on kui, elif on juhul, else on siis
 #if avaldis on: käsud, mis täidetakse, kui avaldis on tõene
 #if avaldis on: mis täidetakse, kui avaldis_1 on tõene
