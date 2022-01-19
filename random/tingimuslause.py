@@ -37,16 +37,25 @@ else:
     print("Viimases bussis olevate inimeste arv: " + str(cal))
 '''
 
-'''
+#'''
 controlnum=0
+controlnum2=0
 suurus=float(input("Sisestage kirja suurus: "))
 teema=str(input("Sisestage kirja teema pealkiri: "))
 vastus=str(input("Kas kirjaga on kaasas fail? "))
-if teema != "":
+if vastus == "jah":
+    controlnum2+1
+if teema == "":
     controlnum+1
-if vastus == 'jah':
+if (suurus > 1.0) and (vastus == "jah"):
     controlnum+1
-'''
+if controlnum > 0:
+    print("Kiri on spämm")
+elif controlnum == 0:
+    print("Kiri ei ole spämm")
+else:
+    print("Sisestasite midagi valesti, proovige uuesti")
+#'''
 #Antud asja polnud vaja edasi teha
 
 
