@@ -140,5 +140,4 @@ if count >= math.log(upper - lower + 1, 2):
     print("\nNumber on %d" % x)
     print("\tRohkem õnne järgmine kord!")
  
-# Better to use This source Code on pycharm!
 ######## ül6
