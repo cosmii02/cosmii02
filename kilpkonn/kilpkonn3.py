@@ -2,8 +2,8 @@ from turtle import*
 import turtle
 
 hideturtle()
-s=int(input("Enter the length of the side of square: "))
-h=int(input("Enter height of something: "))
+s=int(input("Sisesta külje pikkus: "))
+h=int(input("Sisesta kõrgus: "))
 forward(s)
 left(90)
 forward(h)

@@ -141,3 +141,25 @@ if count >= math.log(upper - lower + 1, 2):
     print("\tRohkem õnne järgmine kord!")
  
 ######## ül6
+from turtle import*
+import turtle
+
+hideturtle()
+s=int(input("Sisesta külje pikkus: "))
+h=int(input("Sisesta kõrgus: "))
+forward(s)
+left(90)
+forward(h)
+left(90)
+forward(s)
+left(90)
+forward(h)
+penup()
+left(180)
+forward(h)
+pendown()
+right(30)
+forward(s)
+right(120)
+forward(s)
+exitonclick()
