@@ -35,7 +35,7 @@ elif sis>12:
     print("Kardan et olete joonud")
 '''
 ######## ül2
-#'''
+'''
 kuud = ["jaanuar", "veebruar", "märts", "aprill", "mai", "juuni", "juuli", "august", "september", "oktoober", "november", "detsember"]
 sood = ["mees", "naine", "mees", "naine", "mees", "naine", "mees", "naine"]
 isikukood = input("Sisestage oma isikukood: ")
@@ -91,11 +91,28 @@ if len(isikukood) == 11:
         print("Ebakorrektne kontrollkoodi väärtus. Proovi uuesti!")
 else : # Kui pikkuse kontroll nurjub - veateade..
     print("Ebakorrektne sisend. Proovi uuesti!")
-#'''            
+'''            
 ######## ül3
-
+'''
+color=input("Sisesta värv inglise keeles: ")
+hideturtle()
+turtle.color(color)
+forward(160)
+left(90)
+forward(160)
+left(90)
+forward(160)
+left(90)
+forward(160)
+exitonclick()
+'''
 ######## ül4
-
+color=input("Sisesta värv inglise keeles: ")
+radius=int(input("Sisesta raadius: "))
+hideturtle()
+turtle.color(color)
+turtle.circle(radius)
+exitonclick()
 ######## ül5
 '''
 # Taking Inputs
