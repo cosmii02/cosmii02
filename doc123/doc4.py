@@ -33,6 +33,7 @@ elif sis>12:
     print("Kardan et olete joonud")
 '''
 ######## ül2
+'''
 kuud = ["jaanuar", "veebruar", "märts", "aprill", "mai", "juuni", "juuli", "august", "september", "oktoober", "november", "detsember"]
 sood = ["mees", "naine", "mees", "naine", "mees", "naine", "mees", "naine"]
 isikukood = input("Sisestage oma isikukood: ")
@@ -90,10 +91,9 @@ if len(isikukood) == 11:
         print("Ebakorrektne kontrollkoodi väärtus. Proovi uuesti!")
 else : # Kui pikkuse kontroll nurjub - veateade..
     print("Ebakorrektne sisend. Proovi uuesti!")
-            
+'''            
 ######## ül3
-print("Mis on sinu lemmikvärv?")
-lemmik = input()
+
 ######## ül4
 
 ######## ül5
