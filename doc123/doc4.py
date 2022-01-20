@@ -1,5 +1,7 @@
 from turtle import*
 import turtle
+import random
+import math
 ######### ül1
 '''
 sis=int(input("Sisesta kuu: "))
@@ -97,5 +99,46 @@ else : # Kui pikkuse kontroll nurjub - veateade..
 ######## ül4
 
 ######## ül5
-
+# Taking Inputs
+lower = int(input("Mis numbrist alates:- "))
+ 
+# Taking Inputs
+upper = int(input("Kuni mis numbrini:- "))
+ 
+# generating random number between
+# the lower and upper
+x = random.randint(lower, upper)
+print("\n\tSul on ainult ",
+       round(math.log(upper - lower + 1, 2)),
+      " võimalust arvata ära number!\n")
+ 
+# Initializing the number of guesses.
+count = 0
+ 
+# for calculation of minimum number of
+# guesses depends upon range
+while count < math.log(upper - lower + 1, 2):
+    count += 1
+ 
+    # taking guessing number as input
+    guess = int(input("Arva numbrit:- "))
+ 
+    # Condition testing
+    if x == guess:
+        print("Õnnitlused sa tegid selle ",
+              count, " korraga")
+        # Once guessed, loop will break
+        break
+    elif x > guess:
+        print("Sinu pakkumine oli liiga väike!")
+    elif x < guess:
+        print("Sinu pakkumine oli liiga kõrge!")
+ 
+# If Guessing is more than required guesses,
+# shows this output.
+if count >= math.log(upper - lower + 1, 2):
+    print("\nNumber on %d" % x)
+    print("\tRohkem õnne järgmine kord!")
+ 
+# Better to use This source Code on pycharm!
 ######## ül6
