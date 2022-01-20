@@ -35,13 +35,11 @@ elif sis>12:
     print("Kardan et olete joonud")
 '''
 ######## ül2
-'''
+#'''
 kuud = ["jaanuar", "veebruar", "märts", "aprill", "mai", "juuni", "juuli", "august", "september", "oktoober", "november", "detsember"]
 sood = ["mees", "naine", "mees", "naine", "mees", "naine", "mees", "naine"]
 isikukood = input("Sisestage oma isikukood: ")
-
 # pikkuse kontroll..
-# noinspection PyInterpreter
 if len(isikukood) == 11:
     # Eeldatav kontrollkood:
     # esimene järk..
@@ -93,12 +91,13 @@ if len(isikukood) == 11:
         print("Ebakorrektne kontrollkoodi väärtus. Proovi uuesti!")
 else : # Kui pikkuse kontroll nurjub - veateade..
     print("Ebakorrektne sisend. Proovi uuesti!")
-'''            
+#'''            
 ######## ül3
 
 ######## ül4
 
 ######## ül5
+'''
 # Taking Inputs
 lower = int(input("Mis numbrist alates:- "))
  
@@ -139,11 +138,11 @@ while count < math.log(upper - lower + 1, 2):
 if count >= math.log(upper - lower + 1, 2):
     print("\nNumber on %d" % x)
     print("\tRohkem õnne järgmine kord!")
- 
+ '''
 ######## ül6
-from turtle import*
-import turtle
-
+# Küsib külje pikkuse ja kõrguse
+# Joonistab nende mõõtmetega maja katusega
+'''
 hideturtle()
 s=int(input("Sisesta külje pikkus: "))
 h=int(input("Sisesta kõrgus: "))
@@ -163,3 +162,4 @@ forward(s)
 right(120)
 forward(s)
 exitonclick()
+'''
