@@ -1,8 +1,7 @@
-mitu = input("Sisestage mitu korda äratada: ")
-arv= int(mitu)
-loendur = 0
-while loendur < 3:
-    print("Tõuse ja sära")
-    loendur += 1
-arv1 = 1
-arv2 = 3
+from time import sleep
+a=int(input("Sisestage mitu korda äratada: "))
+
+while a>0:
+    print("Tõuse ja sära!")
+    a-=1
+    sleep(1)
