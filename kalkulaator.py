@@ -8,7 +8,7 @@ class Calculator:
     def division(self):
         print(a / b)
 a = float(input("Enter first number:"))
-b = float(input("Enter first number:"))
+b = float(input("Enter second number:"))
 obj = Calculator()
 choice = 1
 while choice != 0:
