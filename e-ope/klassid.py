@@ -85,16 +85,16 @@
 #################
 # Klass ja väljad
 #################
-class tyhiklass:
-  pass
-
-koer=tyhiklass()
-koer.nimi="Muri"
-setattr(koer, "synniaasta", 1998) #samaväärne väärtuseomistus
-print (koer.nimi)
-print (vars(koer)) #koera küljes olevad muutujad
-print (hasattr(koer, "nimi"))
-print (getattr(koer, "nimi"))
-if hasattr(koer, "synniaasta"):
-  delattr(koer, "synniaasta")
-del koer.nimi
+# class tyhiklass:
+#   pass
+#
+# koer=tyhiklass()
+# koer.nimi="Muri"
+# setattr(koer, "synniaasta", 1998) #samaväärne väärtuseomistus
+# print (koer.nimi)
+# print (vars(koer)) #koera küljes olevad muutujad
+# print (hasattr(koer, "nimi"))
+# print (getattr(koer, "nimi"))
+# if hasattr(koer, "synniaasta"):
+#   delattr(koer, "synniaasta")
+# del koer.nimi
