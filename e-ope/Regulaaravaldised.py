@@ -18,4 +18,4 @@ if userask=="1" or userask=="1.":
 elif userask=="2"or userask=="2.":
     passes()
 else:
-    print("You can only enter '1' or '2'")
+    print("Incorrect input, the following are correct inputs: 1 | 1. | 2 | 2.")
