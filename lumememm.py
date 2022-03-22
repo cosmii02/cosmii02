@@ -1,8 +1,8 @@
-import pygame
+import pygame #Impordib pygame mooduli
 pygame.init()
 
-screen=pygame.display.set_mode([300,300])
-pygame.display.set_caption("Lumemees")
+screen=pygame.display.set_mode([300,300]) # määrab akna resolutsiooni
+pygame.display.set_caption("Lumemees") # Määrab akna nime
 
 screen.fill([0, 0, 0])
 pygame.draw.circle(screen, [255, 255, 255], [150,150], 25, 100)
