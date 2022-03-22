@@ -16,3 +16,13 @@ pygame.draw.circle(screen,[255,255,255], [150,88],20,100)
 pygame.draw.polygon(screen, [255,153,0], [[147,90],[151,90],[150,100]],3)
 
 pygame.display.flip()
+
+
+#eeeeeeeeeeeeeeee
+running = True
+while running:
+  for event in pygame.event.get():
+    if event.type == pygame.QUIT:
+      running = False
+    if running == False:
+      pygame.quit()
