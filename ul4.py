@@ -1,4 +1,4 @@
-import pygame, sys, random, time # Imports the said modules
+import pygame, sys, random, time, pypresence, psutil # Imports the said modules
 pygame.init() #initialize pygame
 # initialize display at 640x480
 screen = pygame.display.set_mode((640, 480)) # set screen size
@@ -88,10 +88,8 @@ while not gameover: # while game is not over loop
 
     screen.blit(pygame.font.Font(None, 20).render(f"Time elapsed: {int(time.time() - start_time)}", True, [255, 255, 255]), [519, 40]) # show time elapsed
 
-
     # show current speed on top left as text
     screen.blit(pygame.font.Font(None, 30).render(f"Speed: {BspeedY}", True, [255, 255, 255]), [10, 10]) # show current speed on top left as text
-
 
     pygame.display.flip() # update display
 gameoverbg= pygame.image.load("gameover.png") # load gameover image
