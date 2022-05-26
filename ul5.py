@@ -2,10 +2,12 @@ import pygame, sys, time
 #import the Paddle Class & the Ball Class
 from paddle import Paddle
 from ball import Ball
-
+from pypresence import Presence
 pygame.init() # initialise the pygame library
 
-
+client_id = '917360810576187433'  # Fake ID, put your real one here
+RPC = Presence(client_id)  # Initialize the client class
+RPC.connect() # Start the handshake loop
 
 # Define some colors
 WHITE = (255, 255, 255) # Defines the color white
@@ -16,7 +18,6 @@ ORANGE = (255, 100, 0) # Defines orange color
 YELLOW = (255, 255, 0) # Defines yellow color
 
 score = 0 # Score variable
-lives = 3 # Lives variable
 
 # Open a new window
 size = (800, 600)
@@ -25,7 +26,10 @@ pygame.display.set_caption("Breakout Game") # Set the title of the window
 
 # This will be a list that will contain all the sprites we intend to use in our game.
 all_sprites_list = pygame.sprite.Group()
-
+# load onhit.wav as onhit
+onhit = pygame.mixer.Sound('onhit.wav')
+gameover = pygame.mixer.Sound('gameover.wav')
+tetris = pygame.mixer.Sound('tetris.wav')
 # Create the Paddle
 # load pad.png
 pygame.image.load("pad.png")
@@ -63,7 +67,7 @@ while carryOn:
         paddle.moveRight(5) # Move the paddle left or right
 
     all_sprites_list.update() # This is the place to call the update() method for any sprites.
-
+    tetris.play() # play tetris
     # Check if the ball is bouncing against any of the 4 walls:
     if ball.rect.x >= 790: # Ball is touching the right wall
         ball.velocity[0] = -ball.velocity[0] # Reverse the ball direction
@@ -71,17 +75,16 @@ while carryOn:
         ball.velocity[0] = -ball.velocity[0] # Reverse the ball direction
     if ball.rect.y > 590: # Ball is touching the bottom wall
         ball.velocity[1] = -ball.velocity[1] # Reverse the ball direction
-        lives -= 1 # Lose a life
-        if lives == 0: # Game over
-            # Display Game Over Message for 3 seconds
-            font = pygame.font.Font(None, 74) # Set font
-            text = font.render("GAME OVER", 1, WHITE) # Set text
-            screen.blit(text, (250, 300)) # Display text
-            pygame.display.flip() # Update the display
-            pygame.time.wait(3000) # Wait 3 seconds
+        tetris.stop()
+        gameover.play()
+        font = pygame.font.Font(None, 74) # Set font
+        text = font.render("GAME OVER", 1, WHITE) # Set text
+        screen.blit(text, (250, 300)) # Display text
+        pygame.display.flip() # Update the display
+        pygame.time.wait(3000) # Wait 3 seconds
 
-            # Stop the Game
-            carryOn = False # Flag that we are done so we exit this loop
+        # Stop the Game
+        carryOn = False # Flag that we are done so we exit this loop
     if ball.rect.y < 40: # If the ball hits the top
         ball.velocity[1] = -ball.velocity[1] # Reverse the ball's y direction
 
@@ -89,8 +92,12 @@ while carryOn:
     if pygame.sprite.collide_mask(ball, paddle): # If the ball hits the paddle
         ball.rect.x -= ball.velocity[0] # Move the ball back to the paddle
         ball.rect.y -= ball.velocity[1] # Move the ball back to the paddle
+        onhit.play() # Play the onhit sound
         ball.bounce() # Reverse the ball's x direction
         score += 1 # Add to the score
+
+        print(RPC.update(state="Ball go brr",
+                         details="Score: " + str(score)))  # Set the presence
 
     screen.fill(DARKBLUE) # Fill the screen with dark blue
     pygame.draw.line(screen, WHITE, [0, 38], [800, 38], 2) # Draw the top border
@@ -99,8 +106,6 @@ while carryOn:
     font = pygame.font.Font(None, 34) # Set the font
     text = font.render("Score: " + str(score), 1, WHITE) # Render the text
     screen.blit(text, (20, 10)) # Draw the text at the top left of the screen
-    text = font.render("Lives: " + str(lives), 1, WHITE) # Render the text
-    screen.blit(text, (650, 10)) # Draw the text at the top right of the screen
 
     all_sprites_list.draw(screen) # Draw all sprites in one go.
 
