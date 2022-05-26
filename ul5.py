@@ -1,28 +1,27 @@
-# Import the pygame library and initialise the game engine
 import pygame, sys, time
-# Let's import the Paddle Class & the Ball Class
+#import the Paddle Class & the Ball Class
 from paddle import Paddle
 from ball import Ball
 
-pygame.init()
+pygame.init() # initialise the pygame library
 
 
 
 # Define some colors
-WHITE = (255, 255, 255)
-DARKBLUE = (36, 90, 190)
-LIGHTBLUE = (0, 176, 240)
-RED = (255, 0, 0)
-ORANGE = (255, 100, 0)
-YELLOW = (255, 255, 0)
+WHITE = (255, 255, 255) # Defines the color white
+DARKBLUE = (36, 90, 190) # Defines dark blue color
+LIGHTBLUE = (0, 176, 240) # Defines light blue color
+RED = (255, 0, 0) # Defines red color
+ORANGE = (255, 100, 0) # Defines orange color
+YELLOW = (255, 255, 0) # Defines yellow color
 
-score = 0
-lives = 3
+score = 0 # Score variable
+lives = 3 # Lives variable
 
 # Open a new window
 size = (800, 600)
 screen = pygame.display.set_mode(size)
-pygame.display.set_caption("Breakout Game")
+pygame.display.set_caption("Breakout Game") # Set the title of the window
 
 # This will be a list that will contain all the sprites we intend to use in our game.
 all_sprites_list = pygame.sprite.Group()
@@ -30,21 +29,21 @@ all_sprites_list = pygame.sprite.Group()
 # Create the Paddle
 # load pad.png
 pygame.image.load("pad.png")
-paddle = Paddle(DARKBLUE, 250, 10)
-paddle.rect.x = 350
-paddle.rect.y = 560
+paddle = Paddle(DARKBLUE, 250, 10) #(color, x, y)
+paddle.rect.x = 350 # x coordinate
+paddle.rect.y = 560 # y coordinate
 
 # Create the ball sprite
-ball = Ball(DARKBLUE, 0, 10)
-ball.rect.x = 345
-ball.rect.y = 195
+ball = Ball(DARKBLUE, 0, 10) # x coordinate, y coordinate
+ball.rect.x = 345 # x coordinate
+ball.rect.y = 195 # y coordinate
 
 # Add the paddle and the ball to the list of sprites
 all_sprites_list.add(paddle)
 all_sprites_list.add(ball)
 
 # The loop will carry on until the user exit the game (e.g. clicks the close button).
-carryOn = True
+carryOn = True # This is a boolean variable that will be used to carry on the main loop
 
 # The clock will be used to control how fast the screen updates
 clock = pygame.time.Clock()
@@ -57,63 +56,56 @@ while carryOn:
             carryOn = False  # Flag that we are done so we exit this loop
 
     # Moving the paddle when the use uses the arrow keys
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT]:
-        paddle.moveLeft(5)
-    if keys[pygame.K_RIGHT]:
-        paddle.moveRight(5)
+    keys = pygame.key.get_pressed() # checking pressed keys
+    if keys[pygame.K_LEFT]: # If the left arrow key is pressed
+        paddle.moveLeft(5) # Move left
+    if keys[pygame.K_RIGHT]: # If the right arrow key is pressed
+        paddle.moveRight(5) # Move the paddle left or right
 
-    # --- Game logic should go here
-    all_sprites_list.update()
+    all_sprites_list.update() # This is the place to call the update() method for any sprites.
 
     # Check if the ball is bouncing against any of the 4 walls:
-    if ball.rect.x >= 790:
-        ball.velocity[0] = -ball.velocity[0]
-    if ball.rect.x <= 0:
-        ball.velocity[0] = -ball.velocity[0]
-    if ball.rect.y > 590:
-        ball.velocity[1] = -ball.velocity[1]
-        lives -= 1
-        if lives == 0:
+    if ball.rect.x >= 790: # Ball is touching the right wall
+        ball.velocity[0] = -ball.velocity[0] # Reverse the ball direction
+    if ball.rect.x <= 0: # Ball is touching the left wall
+        ball.velocity[0] = -ball.velocity[0] # Reverse the ball direction
+    if ball.rect.y > 590: # Ball is touching the bottom wall
+        ball.velocity[1] = -ball.velocity[1] # Reverse the ball direction
+        lives -= 1 # Lose a life
+        if lives == 0: # Game over
             # Display Game Over Message for 3 seconds
-            font = pygame.font.Font(None, 74)
-            text = font.render("GAME OVER", 1, WHITE)
-            screen.blit(text, (250, 300))
-            pygame.display.flip()
-            pygame.time.wait(3000)
+            font = pygame.font.Font(None, 74) # Set font
+            text = font.render("GAME OVER", 1, WHITE) # Set text
+            screen.blit(text, (250, 300)) # Display text
+            pygame.display.flip() # Update the display
+            pygame.time.wait(3000) # Wait 3 seconds
 
             # Stop the Game
-            carryOn = False
-    if ball.rect.y < 40:
-        ball.velocity[1] = -ball.velocity[1]
+            carryOn = False # Flag that we are done so we exit this loop
+    if ball.rect.y < 40: # If the ball hits the top
+        ball.velocity[1] = -ball.velocity[1] # Reverse the ball's y direction
 
     # Detect collisions between the ball and the paddles
-    if pygame.sprite.collide_mask(ball, paddle):
-        ball.rect.x -= ball.velocity[0]
-        ball.rect.y -= ball.velocity[1]
-        ball.bounce()
-        score += 1
+    if pygame.sprite.collide_mask(ball, paddle): # If the ball hits the paddle
+        ball.rect.x -= ball.velocity[0] # Move the ball back to the paddle
+        ball.rect.y -= ball.velocity[1] # Move the ball back to the paddle
+        ball.bounce() # Reverse the ball's x direction
+        score += 1 # Add to the score
 
-    # --- Drawing code should go here
-    # First, clear the screen to dark blue.
-    screen.fill(DARKBLUE)
-    pygame.draw.line(screen, WHITE, [0, 38], [800, 38], 2)
+    screen.fill(DARKBLUE) # Fill the screen with dark blue
+    pygame.draw.line(screen, WHITE, [0, 38], [800, 38], 2) # Draw the top border
 
     # Display the score and the number of lives at the top of the screen
-    font = pygame.font.Font(None, 34)
-    text = font.render("Score: " + str(score), 1, WHITE)
-    screen.blit(text, (20, 10))
-    text = font.render("Lives: " + str(lives), 1, WHITE)
-    screen.blit(text, (650, 10))
+    font = pygame.font.Font(None, 34) # Set the font
+    text = font.render("Score: " + str(score), 1, WHITE) # Render the text
+    screen.blit(text, (20, 10)) # Draw the text at the top left of the screen
+    text = font.render("Lives: " + str(lives), 1, WHITE) # Render the text
+    screen.blit(text, (650, 10)) # Draw the text at the top right of the screen
 
-    # Now let's draw all the sprites in one go. (For now we only have 2 sprites!)
-    all_sprites_list.draw(screen)
+    all_sprites_list.draw(screen) # Draw all sprites in one go.
 
-    # --- Go ahead and update the screen with what we've drawn.
-    pygame.display.flip()
+    pygame.display.flip() # Update the screen with what we've drawn.
 
-    # --- Limit to 60 frames per second
-    clock.tick(60)
+    clock.tick(60)# Limit to 60 frames per second
 
-# Once we have exited the main program loop we can stop the game engine:
-pygame.quit()
+pygame.quit() # Close the window and quit.
