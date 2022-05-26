@@ -1,4 +1,4 @@
-import pygame, sys, random, time, pypresence, psutil # Imports the said modules
+import pygame, sys, random, time # Imports the said modules
 pygame.init() #initialize pygame
 # initialize display at 640x480
 screen = pygame.display.set_mode((640, 480)) # set screen size
