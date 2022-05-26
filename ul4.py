@@ -29,6 +29,8 @@ RspeedY = 0 # initialize car speed
 gameover = False # initialize gameover flag
 BposX = random.randint(450, 460)  # initialize car position
 B2posX = random.randint(450, 460) # initialize 2nd car position
+Dpos=480
+Upos=0
 while not gameover: # while game is not over loop
     # fps
     clock.tick(120) # set frame rate
@@ -38,7 +40,11 @@ while not gameover: # while game is not over loop
             sys.exit() # quit game
 
     # pildi lisamine ekraanile
-    screen.blit(bg, (0, 0)) # blit background image
+    Upos-=BspeedY
+    Dpos-=BspeedY
+    screen.blit(bg, (0, Upos)) # blit background image
+    screen.blit(bg, (0, Dpos))  # blit background image
+
     screen.blit(f1_blue, (BposX, BposY)) # blit car image
     screen.blit(f2_blue, (B2posX, B2posY)) # blit car image
     BposY += BspeedY # move car
