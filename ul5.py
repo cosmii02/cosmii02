@@ -1,6 +1,5 @@
 # Import the pygame library and initialise the game engine
-import pygame, psutil, sys, time
-from pypresence import Presence
+import pygame, sys, time
 # Let's import the Paddle Class & the Ball Class
 from paddle import Paddle
 from ball import Ball
