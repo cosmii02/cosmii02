@@ -10,7 +10,7 @@ screen.fill((0, 0, 0)) #fill screen with black
 min_intensity = 0 #set minimum size
 max_intensity = 255 #set maximum size
 radius=10 #Starting at 10px size
-
+amo=0
 running = True #set running to true
 while running: #while running
     ev=pygame.event.get() #get events
@@ -23,10 +23,15 @@ while running: #while running
             color=(random.randint(min_intensity, max_intensity), random.randint(min_intensity, max_intensity), random.randint(min_intensity, max_intensity)) #random color
             random.randint(min_intensity, max_intensity) #random color
             pygame.draw.circle(screen, color, pos, radius, width=1) #draw circle
+            # amo+=1
+            # if amo==10:
+
             radius+=1 #increase radius
             pygame.display.flip() #update screen
-            if radius > 100: #if radius is greater than 100
+            if radius > 19: #if radius is greater than 100
                 radius = 10 #reset radius
+                screen.fill((0, 0, 0)) #fill screen with black
+                pygame.draw.circle(screen, color, pos, radius, width=1)  # draw circle
                 pygame.display.flip() #update screen
         if event.type == pygame.QUIT: #if user quits
             running = False #set running to false
