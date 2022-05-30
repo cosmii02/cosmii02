@@ -39,14 +39,10 @@ while not gameover: # while game is not over loop
         if event.type == pygame.QUIT: # if window is closed
             sys.exit() # quit game
 
-    # pildi lisamine ekraanile
-    Upos-=BspeedY
-    Dpos-=BspeedY
-    screen.blit(bg, (0, Upos)) # blit background image
-    screen.blit(bg, (0, Dpos))  # blit background image
-
+    screen.blit(bg, (0, 0))  # blit background image
     screen.blit(f1_blue, (BposX, BposY)) # blit car image
     screen.blit(f2_blue, (B2posX, B2posY)) # blit car image
+
     BposY += BspeedY # move car
     B2posY += BspeedY+1 # move car
 
