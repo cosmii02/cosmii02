@@ -1,4 +1,8 @@
 import pygame, sys, time, random
+from pypresence import Presence
+client_id = '917360810576187433'  # Fake ID, put your real one here
+RPC = Presence(client_id)  # Initialize the client class
+RPC.connect() # Start the handshake loop
 
 # load wasted.png
 wasted_image = pygame.image.load("wasted.jpg")
@@ -155,7 +159,7 @@ while True:
         game_window.blit(rubik, (pos[0], pos[1]))
 
     # Snake food
-    pygame.draw.rect(game_window, white, pygame.Rect(food_pos[0], food_pos[1], 10, 10))
+    pygame.draw.rect(game_window, white, pygame.Rect(food_pos[0], food_pos[1], 50, 50))
 
     # Game Over conditions
     # Getting out of bounds
