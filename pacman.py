@@ -357,7 +357,7 @@ background.fill(black)
 clock = pygame.time.Clock()
 
 pygame.font.init()
-font = pygame.font.Font("freesansbold.ttf", 24)
+font = pygame.font.Font("Segoe UI Bold.ttf", 24)
 
 #default locations for Pacman and monstas
 w = 303-16 #Width
