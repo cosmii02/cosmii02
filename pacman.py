@@ -1,4 +1,4 @@
-import pygame
+import pygame # impordib pygame mooduli
   
 black = (0,0,0)
 white = (255,255,255)
@@ -7,37 +7,37 @@ green = (0,255,0)
 red = (255,0,0)
 purple = (255,0,255)
 yellow   = ( 255, 255,   0)
-
+# See klass tähistab allosas olevat riba, mida mängija juhib
 Trollicon=pygame.image.load('rubik.png')
 pygame.display.set_icon(Trollicon)
 
-#Add music
+# Lisab muusika
 pygame.mixer.init()
 pygame.mixer.music.load('Pacman-master/pacman.mp3')
 pygame.mixer.music.play(-1, 0.0)
 
-# This class represents the bar at the bottom that the player controls
+# See klass tähistab allosas olevat riba, mida mängija juhib
 class Wall(pygame.sprite.Sprite):
-    # Constructor function
+    # Konstruktori funktsioon
     def __init__(self,x,y,width,height, color):
-        # Call the parent's constructor
+        # Kutsub klassi Sprite konstruktori funktsiooni
         pygame.sprite.Sprite.__init__(self)
   
-        # Make a blue wall, of the size specified in the parameters
+        # Muudab pildi
         self.image = pygame.Surface([width, height])
         self.image.fill(color)
   
-        # Make our top-left corner the passed-in location.
+        # Muudab pildi kolli
         self.rect = self.image.get_rect()
         self.rect.top = y
         self.rect.left = x
 
-# This creates all the walls in room 1
+# See klass tähistab allosas olevat riba, mida mängija juhib
 def setupRoomOne(all_sprites_list):
     # Make the walls. (x_pos, y_pos, width, height)
     wall_list=pygame.sprite.RenderPlain()
      
-    # This is a list of walls. Each is in the form [x, y, width, height]
+    # Set up the walls ( x,y , laius, pikkus)
     walls = [ [0,0,6,600],
               [0,0,600,6],
               [0,600,606,6],
@@ -78,13 +78,13 @@ def setupRoomOne(all_sprites_list):
               [360,540,126,6]
             ]
      
-    # Loop through the list. Create the wall, add it to the list
+    # loob seina
     for item in walls:
         wall=Wall(item[0],item[1],item[2],item[3],blue)
         wall_list.add(wall)
         all_sprites_list.add(wall)
          
-    # return our new list
+    # return wall_list
     return wall_list
 
 def setupGate(all_sprites_list):
@@ -93,64 +93,59 @@ def setupGate(all_sprites_list):
       all_sprites_list.add(gate)
       return gate
 
-# This class represents the ball        
-# It derives from the "Sprite" class in Pygame
+# See klass tähistab allosas olevat riba, mida mängija juhib
 class Block(pygame.sprite.Sprite):
      
-    # Constructor. Pass in the color of the block, 
-    # and its x and y position
+    # Konstruktori funktsioon,
+    # x,y - käänupunkt
     def __init__(self, color, width, height):
-        # Call the parent class (Sprite) constructor
+        # Kutsub klassi Sprite konstruktori funktsiooni
         pygame.sprite.Sprite.__init__(self) 
  
-        # Create an image of the block, and fill it with a color.
-        # This could also be an image loaded from the disk.
+        # Muudab pildi
         self.image = pygame.Surface([width, height])
         self.image.fill(white)
         self.image.set_colorkey(white)
         pygame.draw.ellipse(self.image,color,[0,0,width,height])
  
-        # Fetch the rectangle object that has the dimensions of the image
-        # image.
-        # Update the position of this object by setting the values 
-        # of rect.x and rect.y
+        # Muudab pildi kolli
         self.rect = self.image.get_rect() 
 
-# This class represents the bar at the bottom that the player controls
+# See klass tähistab allosas olevat riba, mida mängija juhib
 class Player(pygame.sprite.Sprite):
   
-    # Set speed vector
+    # Seadistab kiiruse vektori
     change_x=0
     change_y=0
   
-    # Constructor function
+    # Konstruktori funktsioon
     def __init__(self,x,y, filename):
-        # Call the parent's constructor
+        # Kutsub klassi Sprite konstruktori funktsiooni
         pygame.sprite.Sprite.__init__(self)
    
-        # Set height, width
+        # seadistab kõrguse ja laiuse
         self.image = pygame.image.load(filename).convert()
   
-        # Make our top-left corner the passed-in location.
+        # Muutke meie vasak ülanurk edasiantud asukohaks.
         self.rect = self.image.get_rect()
         self.rect.top = y
         self.rect.left = x
         self.prev_x = x
         self.prev_y = y
 
-    # Clear the speed of the player
+    # Tühjendage mängija kiirus
     def prevdirection(self):
         self.prev_x = self.change_x
         self.prev_y = self.change_y
 
-    # Change the speed of the player
+    #Muutke mängija kiirust
     def changespeed(self,x,y):
         self.change_x+=x
         self.change_y+=y
           
-    # Find a new position for the player
+    # Muutke mängija asukohta
     def update(self,walls,gate):
-        # Get the old position, in case we need to go back to it
+        # Muutke mängija asukohta
         
         old_x=self.rect.left
         new_x=old_x+self.change_x
@@ -161,7 +156,7 @@ class Player(pygame.sprite.Sprite):
         new_y=old_y+self.change_y
         prev_y=old_y+self.prev_y
 
-        # Did this update cause us to hit a wall?
+        # Kontrolli, kas mängija asukoht on võrdne sellele, mis ta oli enne
         x_collide = pygame.sprite.spritecollide(self, walls, False)
         if x_collide:
             # Whoops, hit a wall. Go back to the old position
@@ -197,7 +192,7 @@ class Player(pygame.sprite.Sprite):
 
 #Inheritime Player klassist
 class Ghost(Player):
-    # Change the speed of the ghost
+    # Muudab kolli kiirust
     def changespeed(self,list,ghost,turn,steps,l):
       try:
         z=list[turn][2]
