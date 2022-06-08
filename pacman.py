@@ -191,8 +191,9 @@ class Player(pygame.sprite.Sprite):
         if gate != False:
           gate_hit = pygame.sprite.spritecollide(self, gate, False)
           if gate_hit:
-            self.rect.left=old_x
-            self.rect.top=old_y
+            print('gate hit')
+            #self.rect.left=old_x
+            #self.rect.top=old_y
 
 #Inheritime Player klassist
 class Ghost(Player):
@@ -526,8 +527,8 @@ def startGame():
 
       monsta_hit_list = pygame.sprite.spritecollide(Pacman, monsta_list, False)
 
-      if monsta_hit_list:
-        doNext("Game Over",235,all_sprites_list,block_list,monsta_list,pacman_collide,wall_list,gate)
+      # if monsta_hit_list:
+      #   doNext("Game Over",235,all_sprites_list,block_list,monsta_list,pacman_collide,wall_list,gate)
 
       # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
       
