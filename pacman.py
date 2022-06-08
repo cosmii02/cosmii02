@@ -357,7 +357,7 @@ background.fill(black)
 clock = pygame.time.Clock()
 
 pygame.font.init()
-font = pygame.font.Font("freesansbold.ttf", 24)
+font = pygame.font.Font("Segoe UI Bold.ttf", 24)
 
 #default locations for Pacman and monstas
 w = 303-16 #Width
@@ -400,19 +400,19 @@ def startGame():
   all_sprites_list.add(Pacman)
   pacman_collide.add(Pacman)
    
-  Blinky=Ghost(w, b_h, "Pacman-master/images/Blinky.png")
+  Blinky=Ghost(w, b_h, "rubik.png")
   monsta_list.add(Blinky)
   all_sprites_list.add(Blinky)
 
-  Pinky=Ghost(w, m_h, "Pacman-master/images/Pinky.png")
+  Pinky=Ghost(w, m_h, "rubik.png")
   monsta_list.add(Pinky)
   all_sprites_list.add(Pinky)
    
-  Inky=Ghost(i_w, m_h, "Pacman-master/images/Inky.png")
+  Inky=Ghost(i_w, m_h, "rubik.png")
   monsta_list.add(Inky)
   all_sprites_list.add(Inky)
    
-  Clyde=Ghost(c_w, m_h, "Pacman-master/images/Clyde.png")
+  Clyde=Ghost(c_w, m_h, "rubik.png")
   monsta_list.add(Clyde)
   all_sprites_list.add(Clyde)
 
