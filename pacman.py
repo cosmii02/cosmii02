@@ -213,7 +213,7 @@ class Ghost(Player):
         return [turn,steps]
       except IndexError:
          return [0,0]
-
+# See klass tähistab allosas olevat riba, mida mängija juhib
 Pinky_directions = [
 [0,-30,4],
 [15,0,9],
@@ -325,26 +325,26 @@ bl = len(Blinky_directions)-1
 il = len(Inky_directions)-1
 cl = len(Clyde_directions)-1
 
-# Call this function so the Pygame library can initialize itself
+# Initsialiseerib pygame mooduli
 pygame.init()
   
-# Create an 606x606 sized screen
+# Loob 606x606 ekraani
 screen = pygame.display.set_mode([606, 606])
 
 # This is a list of 'sprites.' Each block in the program is
 # added to this list. The list is managed by a class called 'RenderPlain.'
 
 
-# Set the title of the window
+# Määrab akna pealkiri
 pygame.display.set_caption('Pacman')
 
-# Create a surface we can draw on
+# Looge pind, millele saame joonistada
 background = pygame.Surface(screen.get_size())
 
-# Used for converting color maps and such
+# Kasutatakse värvikaartide jms teisendamiseks
 background = background.convert()
   
-# Fill the screen with a black background
+# Täitke ekraan musta taustaga
 background.fill(black)
 
 
@@ -390,7 +390,7 @@ def startGame():
   c_steps = 0
 
 
-  # Create the player paddle object
+  # Looge mängija aeruobjekt
   Pacman = Player(w, p_h, "Pacman-master/images/Pinky.png")
   all_sprites_list.add(Pacman)
   pacman_collide.add(Pacman)
@@ -411,7 +411,7 @@ def startGame():
   monsta_list.add(Clyde)
   all_sprites_list.add(Clyde)
 
-  # Draw the grid
+  # Joonista ruudustik
   for row in range(19):
       for column in range(19):
           if (row == 7 or row == 8) and (column == 8 or column == 9 or column == 10):
