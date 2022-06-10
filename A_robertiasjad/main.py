@@ -25,7 +25,6 @@ screen.geometry("500x500") # Määrame ekraani suuruse
 screen.title("Python Form") # Määrame ekraani pealkirja
 heading = Label(text="Python Form", bg="grey", fg="black", width="500", height="3") # Määrame pealkirja
 heading.pack() # Pakime ekraanile
-
 firstname_text = Label(text="Firstname * ", ) # Määrame väljade pealkirjad
 lastname_text = Label(text="Lastname * ", ) # Määrame väljade pealkirjad
 age_text = Label(text="Age * ", ) # Määrame väljade pealkirjad
