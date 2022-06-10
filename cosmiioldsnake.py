@@ -3,6 +3,7 @@ import pygame, sys, time, random
 # load wasted.png
 wasted_image = pygame.image.load("wasted.jpg")
 
+
 # Difficulty settings
 # Easy      ->  10
 # Medium    ->  25
@@ -10,7 +11,6 @@ wasted_image = pygame.image.load("wasted.jpg")
 # Harder    ->  60
 # Impossible->  120
 difficulty = 10
-
 
 # Window size
 frame_size_x = 720
