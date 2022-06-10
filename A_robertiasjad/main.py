@@ -8,7 +8,7 @@ def save_info(): # Funktsioon, mis salvestab andmed
     age_info = str(age_info) # Muudame väärtuse stringiks
     print(firstname_info, lastname_info, age_info) # Prindime andmed
 
-    file = open("user.txt", "w") # Avame faili kirjutamiseks
+    file = open("../user.txt", "w") # Avame faili kirjutamiseks
     file.write(firstname_info) # Kirjutame andmed faili
     file.write(lastname_info) # Kirjutame andmed faili
     file.write(age_info) # Kirjutame andmed faili
