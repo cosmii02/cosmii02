@@ -12,9 +12,9 @@ Trollicon=pygame.image.load('rubik.png')
 pygame.display.set_icon(Trollicon)
 
 # Lisab muusika
-pygame.mixer.init()
-pygame.mixer.music.load('Pacman-master/pacman.mp3')
-pygame.mixer.music.play(-1, 0.0)
+# pygame.mixer.init()
+# pygame.mixer.music.load('Pacman-master/pacman.mp3')
+# pygame.mixer.music.play(-1, 0.0)
 
 # See klass tähistab allosas olevat riba, mida mängija juhib
 class Wall(pygame.sprite.Sprite):
@@ -391,7 +391,7 @@ def startGame():
 
 
   # Looge mängija aeruobjekt
-  Pacman = Player(w, p_h, "Pacman-master/images/Pinky.png")
+  Pacman = Player(w, p_h, "pinky.jpg")
   all_sprites_list.add(Pacman)
   pacman_collide.add(Pacman)
    
