@@ -1,0 +1,6 @@
+7. algne pythoni graafika tkinter mooduliga
+8. Randoomse parooli generaator
+9. Pildi allalaadija
+10. sms saatja kasutades sinch api-d
+11. digitaalkella tegemine tkinter mooduliga
+12. hobusevõistlus tkinteriga
