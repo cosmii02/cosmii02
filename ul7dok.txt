@@ -1,3 +1,0 @@
-Esimene viga oli ringide täitmine, lahendasin selle muutes ringi laiuseks 1
-Teine viga oli vanima ringi kustutamine, alguses tegin lihtsalt koodile restardi, kuid see kustutab kõik ära.
-Lahendasin selle
