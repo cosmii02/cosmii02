@@ -2,7 +2,7 @@
 
 # Update packages and install necessary dependencies
 sudo apt update
-sudo apt install -y nginx mariadb-server php8.1-fpm php8.1-mysql dialog
+sudo apt install -y nginx mariadb-server php8.1-fpm php8.1-mysql
 
 # Enable and start Nginx and MariaDB services
 sudo systemctl enable nginx
@@ -10,13 +10,10 @@ sudo systemctl start nginx
 sudo systemctl enable mariadb
 sudo systemctl start mariadb
 
-# Dialog colors and appearance
-export DIALOGOPTS="--colors --backtitle \"WordPress Setup\" --title \"WordPress Setup Wizard\""
-
 # Create the WordPress database and user
-db_name=$(dialog --stdout --inputbox "\Zb\Z0Enter the \Zb\Z1WordPress database name\Zn:" 8 40)
-db_user=$(dialog --stdout --inputbox "\Zb\Z0Enter the \Zb\Z1WordPress database user\Zn:" 8 40)
-db_pass=$(dialog --stdout --insecure --passwordbox "\Zb\Z0Enter the \Zb\Z1WordPress database user's password\Zn:" 8 40)
+db_name=$(whiptail --inputbox "Enter the WordPress database name:" 8 40 3>&1 1>&2 2>&3)
+db_user=$(whiptail --inputbox "Enter the WordPress database user:" 8 40 3>&1 1>&2 2>&3)
+db_pass=$(whiptail --passwordbox "Enter the WordPress database user's password:" 8 40 3>&1 1>&2 2>&3)
 
 sudo mysql -e "CREATE DATABASE ${db_name};"
 sudo mysql -e "CREATE USER '${db_user}'@'localhost' IDENTIFIED BY '${db_pass}';"
@@ -29,7 +26,7 @@ tar xzf latest.tar.gz
 sudo cp -R wordpress/* /var/www/html/
 
 # Set up Nginx configuration
-domain_name=$(dialog --stdout --inputbox "\Zb\Z0Enter your \Zb\Z1domain name\Zn (e.g., example.com):" 8 60)
+domain_name=$(whiptail --inputbox "Enter your domain name (e.g., example.com):" 8 60 3>&1 1>&2 2>&3)
 
 sudo tee /etc/nginx/sites-available/wordpress <<EOL
 server {
@@ -65,4 +62,4 @@ sudo sed -i "s/database_name_here/${db_name}/g" /var/www/html/wp-config.php
 sudo sed -i "s/username_here/${db_user}/g" /var/www/html/wp-config.php
 sudo sed -i "s/password_here/${db_pass}/g" /var/www/html/wp-config.php
 
-dialog --msgbox "\Zb\Z0WordPress installation complete. Please visit \Zb\Z1http://${domain_name}/wp-admin\Zn to complete the setup." 8 60
+whiptail --msgbox "WordPress installation complete. Please visit http://${domain_name}/wp-admin to complete the setup." 8 60
