@@ -23,30 +23,56 @@
     </nav>
     <main>
       <h2>Latest Scripts</h2>
-      <div class="script">
-        <h3>Script 1</h3>
-        <pre>#!/bin/bash
-
-echo "Hello, world!"
-
-exit 0</pre>
-      </div>
-      <div class="script">
-        <h3>Script 2</h3>
-        <pre>#!/bin/bash
-
-# Script to print numbers from 1 to 10
-
-for i in {1..10}
-do
-  echo $i
-done
-
-exit 0</pre>
+      <div id="scripts">
+        <p>Loading scripts...</p>
       </div>
     </main>
     <footer>
       &copy; 2023 Bash Script Hosting Site. All rights reserved.
     </footer>
+    <script>
+      window.onload = function() {
+        var scriptsDiv = document.getElementById('scripts');
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+          if (this.readyState === 4 && this.status === 200) {
+            var scripts = this.responseText.split('\n');
+            var scriptHtml = '';
+            for (var i = 0; i < scripts.length; i++) {
+              if (scripts[i].endsWith('.sh')) {
+                scriptHtml += '<div class="script">';
+                scriptHtml += '<h3>' + scripts[i] + '</h3>';
+                scriptHtml += '<pre>';
+                scriptHtml += 'Loading script...';
+                scriptHtml += '</pre>';
+                scriptHtml += '</div>';
+              }
+            }
+            if (scriptHtml === '') {
+              scriptHtml = '<p>No scripts found.</p>';
+            }
+            scriptsDiv.innerHTML = scriptHtml;
+            for (var i = 0; i < scripts.length; i++) {
+              if (scripts[i].endsWith('.sh')) {
+                loadScript(scripts[i]);
+              }
+            }
+          }
+        };
+        request.open('GET', './', true);
+        request.send();
+        function loadScript(scriptName) {
+          var scriptDiv = document.querySelector('h3:contains(' + scriptName + ')').parentNode;
+          var scriptRequest = new XMLHttpRequest();
+          scriptRequest.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+              scriptDiv.querySelector('pre').textContent = this.responseText;
+            }
+          };
+          scriptRequest.open('GET', scriptName, true);
+          scriptRequest.send();
+        }
+      };
+    </script>
   </body>
 </html>
