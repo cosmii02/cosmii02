@@ -34,7 +34,7 @@
       window.onload = function() {
         var scriptsDiv = document.getElementById('scripts');
         var scriptHtml = '';
-        fetch('./')
+        fetch('/')
           .then(response => response.text())
           .then(text => {
             var parser = new DOMParser();
