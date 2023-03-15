@@ -33,18 +33,19 @@
     <script>
       window.onload = function() {
         var scriptsDiv = document.getElementById('scripts');
-        var request = new XMLHttpRequest();
-        request.onreadystatechange = function() {
-          if (this.readyState === 4 && this.status === 200) {
-            var scripts = this.responseText.split('\n');
-            var scriptHtml = '';
-            for (var i = 0; i < scripts.length; i++) {
-              if (scripts[i].endsWith('.sh')) {
+        var scriptHtml = '';
+        fetch('./')
+          .then(response => response.text())
+          .then(text => {
+            var parser = new DOMParser();
+            var html = parser.parseFromString(text, 'text/html');
+            var links = html.querySelectorAll('a');
+            for (var i = 0; i < links.length; i++) {
+              var link = links[i].getAttribute('href');
+              if (link.endsWith('.sh')) {
                 scriptHtml += '<div class="script">';
-                scriptHtml += '<h3>' + scripts[i] + '</h3>';
-                scriptHtml += '<pre>';
-                scriptHtml += 'Loading script...';
-                scriptHtml += '</pre>';
+                scriptHtml += '<h3>' + link + '</h3>';
+                scriptHtml += '<pre>Loading script...</pre>';
                 scriptHtml += '</div>';
               }
             }
@@ -52,25 +53,22 @@
               scriptHtml = '<p>No scripts found.</p>';
             }
             scriptsDiv.innerHTML = scriptHtml;
-            for (var i = 0; i < scripts.length; i++) {
-              if (scripts[i].endsWith('.sh')) {
-                loadScript(scripts[i]);
+            for (var i = 0; i < links.length; i++) {
+              var link = links[i].getAttribute('href');
+              if (link.endsWith('.sh')) {
+                loadScript(link);
               }
             }
-          }
-        };
-        request.open('GET', './', true);
-        request.send();
+          })
+          .catch(error => console.log('Error fetching file listing:', error));
         function loadScript(scriptName) {
           var scriptDiv = document.querySelector('h3:contains(' + scriptName + ')').parentNode;
-          var scriptRequest = new XMLHttpRequest();
-          scriptRequest.onreadystatechange = function() {
-            if (this.readyState === 4 && this.status === 200) {
-              scriptDiv.querySelector('pre').textContent = this.responseText;
-            }
-          };
-          scriptRequest.open('GET', scriptName, true);
-          scriptRequest.send();
+          fetch(scriptName)
+            .then(response => response.text())
+            .then(text => {
+              scriptDiv.querySelector('pre').textContent = text;
+            })
+            .catch(error => console.log('Error loading script:', error));
         }
       };
     </script>
