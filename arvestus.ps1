@@ -1,4 +1,4 @@
- # Define variables
+# Defineerime muutujad
 $computerName = $env:COMPUTERNAME
 $username = $env:USERNAME
 $operatingSystem = (Get-CimInstance Win32_OperatingSystem).Caption
@@ -16,40 +16,39 @@ $powerPlan = (powercfg /getactivescheme | Select-String ':\s*(.*)$' | ForEach-Ob
 $currentDateTime = Get-Date
 $ping = Test-Connection -ComputerName google.com -Count 1 -Quiet
 
-# Check for internet connection and display message
+# Kontrollime internetiühendust ja väljastame vastava teate
 if ($ping) {
-    $internetConnection = "Internet connection is available."
+    $internetConnection = "Internetiühendus on saadaval."
 } else {
-    $internetConnection = "Internet connection is not available."
+    $internetConnection = "Internetiühendus puudub."
 }
 
-# Check for valid IP address and display message
+# Kontrollime, kas IP-aadress on kehtiv ja väljastame vastava teate
 if ($ipAddress -notlike '169.*') {
-    $ipMessage = "IP address: $ipAddress"
+    $ipMessage = "IP-aadress: $ipAddress"
 } else {
-    $ipMessage = "Failed to get IP address."
+    $ipMessage = "IP-aadressi hankimine ebaõnnestus."
 }
 
-# Create output string
+# Loome väljundstringi
 $output = @"
-Computer Name: $computerName
-Username: $username
-Operating System: $operatingSystem
-Processor: $processor
-Memory: $memory GB
-Free Space on C drive: $freeSpaceC GB
-Total Size of C drive: $totalSizeC GB
+Arvuti nimi: $computerName
+Kasutajanimi: $username
+Operatsioonisüsteem: $operatingSystem
+Protsessor: $processor
+Mälu: $memory GB
+Vaba ruumi kettal C: $freeSpaceC GB
+Ketta C suurus: $totalSizeC GB
 $ipMessage
-MAC Address: $macAddress
-Default Gateway: $defaultGateway
-DNS Servers: $dnsServers
-Windows Firewall Status: $firewallEnabled
-Power Plan: $powerPlan
-Current Date and Time: $currentDateTime
+MAC-aadress: $macAddress
+Vaikimisi värav: $defaultGateway
+DNS-serverid: $dnsServers
+Windowsi tulemüüri olek: $firewallEnabled
+Toiteplaani seadistus: $powerPlan
+Praegune kuupäev ja kellaaeg: $currentDateTime
 $internetConnection
 "@
 
-# Write output to console and file
+# Väljastame väljundi konsoolile ja salvestame faili
 Write-Host $output
 $output | Out-File -FilePath 'C:\arvutiinfo.txt'
- 
