@@ -1,29 +1,55 @@
-# Get system information
-$sysInfo = @{
-    "Operating System" = (Get-CimInstance Win32_OperatingSystem).Caption
-    "Architecture" = (Get-CimInstance Win32_Processor).AddressWidth.ToString() + "-bit"
-    "Processor" = (Get-CimInstance Win32_Processor).Name
-    "RAM" = "{0:N2} GB" -f ((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB)
-    "Hard Drive Size" = "{0:N2} GB" -f ((Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'").Size / 1GB)
-    "Hard Drive Free Space" = "{0:N2} GB" -f ((Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'").FreeSpace / 1GB)
-    "Display Resolution" = (Get-CimInstance Win32_VideoController).VideoModeDescription
-    "MAC Address" = (Get-CimInstance Win32_NetworkAdapterConfiguration | Where-Object { $_.IPAddress -ne $null }).MACAddress
-    "IP Address" = (Get-CimInstance Win32_NetworkAdapterConfiguration | Where-Object { $_.IPAddress -ne $null }).IPAddress[0]
-}
+ # Define variables
+$computerName = $env:COMPUTERNAME
+$username = $env:USERNAME
+$operatingSystem = (Get-CimInstance Win32_OperatingSystem).Caption
+$processor = (Get-CimInstance Win32_Processor).Name
+$memory = [Math]::Round((Get-CimInstance Win32_PhysicalMemory | Measure-Object Capacity -Sum).Sum / 1GB, 2)
+$freeSpaceC = [Math]::Round((Get-CimInstance Win32_LogicalDisk -Filter 'DeviceID="C:"').FreeSpace / 1GB, 2)
+$totalSizeC = [Math]::Round((Get-CimInstance Win32_LogicalDisk -Filter 'DeviceID="C:"').Size / 1GB, 2)
+$ipConfig = Get-NetIPConfiguration | Where-Object {$_.IPv4DefaultGateway -ne $null}
+$ipAddress = $ipConfig.IPv4Address.IPAddress
+$macAddress = (Get-NetAdapter | Where-Object {$_.InterfaceAlias -eq 'Ethernet'}).MacAddress
+$defaultGateway = (Get-NetRoute | Where-Object {$_.DestinationPrefix -eq '0.0.0.0/0' -and $_.AddressFamily -eq 'IPv4'}).NextHop
+$dnsServers = (Get-DnsClientServerAddress).ServerAddresses
+$firewallEnabled = (Get-NetFirewallProfile).Enabled
+$powerPlan = (powercfg /getactivescheme | Select-String ':\s*(.*)$' | ForEach-Object {$_.Matches.Groups[1].Value})
+$currentDateTime = Get-Date
+$ping = Test-Connection -ComputerName google.com -Count 1 -Quiet
 
-# Check internet connection
-if (Test-Connection -ComputerName www.google.com -Count 1 -Quiet) {
-    Write-Host "Internet connection: Connected"
+# Check for internet connection and display message
+if ($ping) {
+    $internetConnection = "Internet connection is available."
 } else {
-    Write-Host "Internet connection: Disconnected"
+    $internetConnection = "Internet connection is not available."
 }
 
-# Check DHCP server for IP address
-if ($sysInfo["IP Address"].StartsWith("169.")) {
-    Write-Host "IP address: Failed to get DHCP server assigned IP address"
+# Check for valid IP address and display message
+if ($ipAddress -notlike '169.*') {
+    $ipMessage = "IP address: $ipAddress"
 } else {
-    Write-Host "IP address:" $sysInfo["IP Address"]
+    $ipMessage = "Failed to get IP address."
 }
 
-# Write system information to file
-$sysInfo | Out-File C:\arvutiinfo.txt
+# Create output string
+$output = @"
+Computer Name: $computerName
+Username: $username
+Operating System: $operatingSystem
+Processor: $processor
+Memory: $memory GB
+Free Space on C drive: $freeSpaceC GB
+Total Size of C drive: $totalSizeC GB
+$ipMessage
+MAC Address: $macAddress
+Default Gateway: $defaultGateway
+DNS Servers: $dnsServers
+Windows Firewall Status: $firewallEnabled
+Power Plan: $powerPlan
+Current Date and Time: $currentDateTime
+$internetConnection
+"@
+
+# Write output to console and file
+Write-Host $output
+$output | Out-File -FilePath 'C:\arvutiinfo.txt'
+ 
