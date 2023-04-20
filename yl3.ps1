@@ -1,17 +1,20 @@
-# Leia abitekst Get-Service käsu kohta
+# Define the desktop location as an environment variable
+$Desktop = "$env:USERPROFILE\Desktop"
+
+# Get help information for the Get-Service cmdlet
 Get-Help Get-Service
 
-# Leia abitekstist üles, kuidas saab kätte näited
+# Display examples for the Get-Service cmdlet
 Get-Help Get-Service -Examples
 
-# Leia näidete hulgast vihje, kuidas otsida teenuseid, mis sisaldab sõna network
+# Filter the examples to display only those that include the word "network"
 Get-Help Get-Service -Examples | Select-String -Pattern "network"
 
-# Vorminda saadud tulemus tabelina (format-table) ja kuva ainult "Status" ja "Name" veerud
-Get-Service | Where-Object {$_.Name -like "*network*"} | Format-Table Name,Status
+# Format the results as a table and display only the Name and Status columns
+Get-Service | Where-Object {$_.Name -like "*network*"} | Format-Table Name, Status
 
-# Väljasta saadud tulemus tekstifaili "Ülesanne3.txt" (out-file)
-Get-Service | Where-Object {$_.Name -like "*network*"} | Format-Table Name,Status | Out-File -FilePath C:\Users\TeieKasutajanimi\Desktop\Ülesanne3.txt
+# Save the results to a text file named "Ülesanne3.txt" on the user's desktop
+Get-Service | Where-Object {$_.Name -like "*network*"} | Format-Table Name, Status | Out-File -FilePath "$Desktop\Ülesanne3.txt"
 
-# Kontrolli, kas tulemus tekkis faili käsuga Get-Content <failinimi>
-Get-Content C:\Users\TeieKasutajanimi\Desktop\Ülesanne3.txt
+# Verify that the file was created by reading its contents using Get-Content
+Get-Content "$Desktop\Ülesanne3.txt"

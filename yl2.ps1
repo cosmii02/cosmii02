@@ -1,24 +1,26 @@
-# Loo oma konto alt profiil
+# Create a PowerShell profile if it does not exist
 if (!(Test-Path $profile)) { New-Item -ItemType File -Path $profile -Force }
 
-# Lisa profiilifaili personaalne tervitusteade
-Set-Content $profile "`nTere tulemast, $env:UserName!`n"
+# Add a personalized greeting to the profile
+Write-Host "Tere tulemast, $env:UserName!"
 
-# Lae alla fortune.txt fail ja salvesta see %USERPROFILE%\Documents\WindowsPowerShell\fortune.txt
-$fortuneFilePath = "$env:USERPROFILE\Documents\WindowsPowerShell\fortune.txt"
-$webClient = New-Object System.Net.WebClient
-$webClient.DownloadFile("https://raw.githubusercontent.com/bmc/devops-fortune/master/fortune.txt", $fortuneFilePath)
+# Make sure the Desktop folder exists
+$desktopPath = "$env:USERPROFILE\Desktop"
+if (!(Test-Path $desktopPath)) { New-Item -ItemType Directory -Path $desktopPath }
 
-# Lisa profiilifaili funktsioon fortune, et kuvada teade fortune.txt failist käivitamisel
+# Add the fortune function to the profile to display a message from the fortune file on startup
 Add-Content $profile @"
 function fortune {
-       [System.IO.File]::ReadAllText('$fortuneFilePath') -replace "`r`n", "`n" -split "`n%`n" | Get-Random
+       [System.IO.File]::ReadAllText('C:/fortune.txt') -replace "`r`n", "`n" -split "`n%`n" | Get-Random
 }
 fortune; echo ''
 "@
 
-# Määra profiili käsk set-location c:\, mis määrab path alguks c:\…\Desktop
-Add-Content $profile "`nSet-Location C:\`n"
+# Set the default location to the Desktop
+Add-Content $profile "`nSet-Location $desktopPath`n"
 
-# Määra PowerShell akna pealkiri oma nimeks
-$host.UI.RawUI.WindowTitle = "$env:UserName's PowerShell"
+# Set the console window title to "Kenneth's PowerShell"
+$host.UI.RawUI.WindowTitle = "Kenneth's PowerShell"
+
+# Pause to keep the console window open
+pause
