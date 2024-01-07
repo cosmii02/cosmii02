@@ -6,6 +6,26 @@ ZABBIX_REPO_ARM64="https://repo.zabbix.com/zabbix/6.5/ubuntu-arm64/pool/main/z/z
 PSK_FILE="/etc/zabbix/zabbix_agentd.psk"
 VERBOSE=0
 
+# Colors for nice output and error messages
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+# Function to print messages
+print_message() {
+    if [ "$2" == "error" ]; then
+        echo -e "${RED}$1${NC}"
+    else
+        echo -e "${GREEN}$1${NC}"
+    fi
+}
+
+# Check if wget is installed
+if ! command -v wget &> /dev/null; then
+    print_message "ERROR: wget not installed" "error"
+    exit 1
+fi
+
 # Ask the user for the Zabbix server IP
 echo -n "Please enter the Zabbix server IP: "
 read -r ZABBIX_SERVER_IP
@@ -23,7 +43,7 @@ while getopts "v" opt; do
       VERBOSE=1
       ;;
     \?)
-      echo "Invalid option: -$OPTARG" >&2
+      print_message "Invalid option: -$OPTARG" "error"
       exit 1
       ;;
   esac
@@ -37,13 +57,6 @@ else
     ZABBIX_REPO=$ZABBIX_REPO_ARM64
 fi
 
-# Colors for nice output and PSK identity/PSK
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[0;33m'
-NC='\033[0m' # No Color
-
 # Function to execute commands
 execute() {
     if [[ "$*" == openssl* ]]; then
@@ -53,17 +66,6 @@ execute() {
         "$@"
     else
         "$@" > /dev/null 2>&1
-    fi
-}
-
-# Function to print messages
-print_message() {
-    if [ $VERBOSE -eq 1 ]; then
-        if [ "$2" == "error" ]; then
-            echo -e "${RED}$1${NC}"
-        else
-            echo -e "${GREEN}$1${NC}"
-        fi
     fi
 }
 
@@ -126,5 +128,5 @@ else
 fi
 
 # Print out the PSK Identity and PSK with color, always
-echo -e "${BLUE}Your PSK Identity is: ${YELLOW}$PSK_IDENTITY${NC}"
-echo -e "${BLUE}Your PSK is: ${YELLOW}$PSK_CONTENT${NC}"
+echo -e "${GREEN}Your PSK Identity is: ${YELLOW}$PSK_IDENTITY${NC}"
+echo -e "${GREEN}Your PSK is: ${YELLOW}$PSK_CONTENT${NC}"
