@@ -3,12 +3,14 @@
 # Variables
 ZABBIX_REPO_AMD64="https://repo.zabbix.com/zabbix/6.5/ubuntu/pool/main/z/zabbix-release/zabbix-release_6.5-1+ubuntu22.04_all.deb"
 ZABBIX_REPO_ARM64="https://repo.zabbix.com/zabbix/6.5/ubuntu-arm64/pool/main/z/zabbix-release/zabbix-release_6.5-1+ubuntu22.04_all.deb"
+DEBIAN_REPO="https://repo.zabbix.com/zabbix/6.5/debian/pool/main/z/zabbix-release/zabbix-release_6.5-1+debian11_all.deb"
 PSK_FILE="/etc/zabbix/zabbix_agentd.psk"
 VERBOSE=0
 
 # Colors for nice output and error messages
 RED='\033[0;31m'
 GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Function to print messages
@@ -18,6 +20,12 @@ print_message() {
     else
         echo -e "${GREEN}$1${NC}"
     fi
+}
+
+# Function to determine the OS
+get_os() {
+    . /etc/os-release
+    echo "$ID$VERSION_ID"
 }
 
 # Check if wget is installed
@@ -32,7 +40,7 @@ read -r ZABBIX_SERVER_IP
 
 # Validate the input if needed (basic format check)
 if ! [[ $ZABBIX_SERVER_IP =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    echo "Invalid IP format. Exiting."
+    print_message "Invalid IP format. Exiting." "error"
     exit 1
 fi
 
@@ -51,18 +59,25 @@ done
 
 # Determine system architecture
 ARCH=$(dpkg --print-architecture)
-if [ "$ARCH" == "amd64" ]; then
-    ZABBIX_REPO=$ZABBIX_REPO_AMD64
+
+# Determine the OS and set the Zabbix Repo accordingly
+OS=$(get_os)
+if [ "$OS" == "ubuntu22.04" ]; then
+    if [ "$ARCH" == "amd64" ]; then
+        ZABBIX_REPO=$ZABBIX_REPO_AMD64
+    else
+        ZABBIX_REPO=$ZABBIX_REPO_ARM64
+    fi
+elif [ "$OS" == "debian11" ]; then
+    ZABBIX_REPO=$DEBIAN_REPO
 else
-    ZABBIX_REPO=$ZABBIX_REPO_ARM64
+    print_message "Unsupported OS. Exiting." "error"
+    exit 1
 fi
 
 # Function to execute commands
 execute() {
-    if [[ "$*" == openssl* ]]; then
-        # Always write the output of the openssl command to the PSK file.
-        "$@" > $PSK_FILE
-    elif [ $VERBOSE -eq 1 ]; then
+    if [ $VERBOSE -eq 1 ]; then
         "$@"
     else
         "$@" > /dev/null 2>&1
@@ -104,12 +119,18 @@ execute sed -i "s/^ServerActive=127.0.0.1/ServerActive=$ZABBIX_SERVER_IP/" /etc/
 
 # Generating PSK and setting permissions
 print_message "Generating and configuring PSK..."
-execute openssl rand -hex 32
+
+# Generate the PSK directly and check if the command succeeds
+openssl rand -hex 32 > $PSK_FILE
+if [ $? -ne 0 ]; then
+    print_message "Failed to generate/write PSK to $PSK_FILE. Check permissions and path." "error"
+    exit 1
+fi
 execute chmod 744 $PSK_FILE
-execute echo "TLSConnect=psk" >> /etc/zabbix/zabbix_agentd.conf
-execute echo "TLSAccept=psk" >> /etc/zabbix/zabbix_agentd.conf
-execute echo "TLSPSKIdentity=$PSK_IDENTITY" >> /etc/zabbix/zabbix_agentd.conf
-execute echo "TLSPSKFile=$PSK_FILE" >> /etc/zabbix/zabbix_agentd.conf
+execute sed -i "s|^# TLSConnect=unencrypted|TLSConnect=psk|" /etc/zabbix/zabbix_agentd.conf
+execute sed -i "s|^# TLSAccept=unencrypted|TLSAccept=psk|" /etc/zabbix/zabbix_agentd.conf
+execute sed -i "s|^# TLSPSKIdentity=|TLSPSKIdentity=$PSK_IDENTITY|" /etc/zabbix/zabbix_agentd.conf
+execute sed -i "s|^# TLSPSKFile=|TLSPSKFile=$PSK_FILE|" /etc/zabbix/zabbix_agentd.conf
 
 # Step c: Start Zabbix agent process and enable at system boot
 print_message "Starting and enabling Zabbix agent..."
