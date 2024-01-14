@@ -2,7 +2,7 @@
 
 # Update packages and install necessary dependencies
 sudo apt update
-sudo apt install -y nginx mariadb-server php8.1-fpm php8.1-mysql
+sudo apt install -y nginx mariadb-server php php-fpm php-mysql whiptail
 
 # Enable and start Nginx and MariaDB services
 sudo systemctl enable nginx
