@@ -1,5 +1,18 @@
 #!/bin/bash
 
+# Check if the -d flag is provided
+USE_DOCKER_DEFAULTS=false
+while getopts "d" opt; do
+  case $opt in
+    d)
+      USE_DOCKER_DEFAULTS=true
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      ;;
+  esac
+done
+
 # Update packages and install necessary dependencies
 sudo apt update
 sudo apt install -y apache2 mariadb-server php libapache2-mod-php php-mysql whiptail
@@ -10,10 +23,16 @@ sudo systemctl start apache2
 sudo systemctl enable mariadb
 sudo systemctl start mariadb
 
-# Create the WordPress database and user
-db_name=$(whiptail --inputbox "Enter the WordPress database name:" 8 40 3>&1 1>&2 2>&3)
-db_user=$(whiptail --inputbox "Enter the WordPress database user:" 8 40 3>&1 1>&2 2>&3)
-db_pass=$(whiptail --passwordbox "Enter the WordPress database user's password:" 8 40 3>&1 1>&2 2>&3)
+# Set default values for docker or ask for user input
+if [ "$USE_DOCKER_DEFAULTS" = true ] ; then
+    db_name="docker"
+    db_user="docker"
+    db_pass="docker"
+else
+    db_name=$(whiptail --inputbox "Enter the WordPress database name:" 8 40 3>&1 1>&2 2>&3)
+    db_user=$(whiptail --inputbox "Enter the WordPress database user:" 8 40 3>&1 1>&2 2>&3)
+    db_pass=$(whiptail --passwordbox "Enter the WordPress database user's password:" 8 40 3>&1 1>&2 2>&3)
+fi
 
 sudo mysql -e "CREATE DATABASE ${db_name};"
 sudo mysql -e "CREATE USER '${db_user}'@'localhost' IDENTIFIED BY '${db_pass}';"
