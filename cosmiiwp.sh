@@ -25,6 +25,9 @@ wget https://wordpress.org/latest.tar.gz
 tar xzf latest.tar.gz
 sudo cp -R wordpress/* /var/www/html/
 
+# Determine the installed PHP version
+php_version=$(php -v | head -n 1 | awk '{print $2}' | cut -d '.' -f 1,2)
+
 # Set up Nginx configuration
 domain_name=$(whiptail --inputbox "Enter your domain name (e.g., example.com):" 8 60 3>&1 1>&2 2>&3)
 
@@ -41,7 +44,7 @@ server {
 
     location ~ \.php$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+        fastcgi_pass unix:/var/run/php/php${php_version}-fpm.sock;
     }
 
     location ~ /\.ht {
