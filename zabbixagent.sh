@@ -4,6 +4,7 @@
 ZABBIX_REPO_AMD64="https://repo.zabbix.com/zabbix/6.5/ubuntu/pool/main/z/zabbix-release/zabbix-release_6.5-1+ubuntu22.04_all.deb"
 ZABBIX_REPO_ARM64="https://repo.zabbix.com/zabbix/6.5/ubuntu-arm64/pool/main/z/zabbix-release/zabbix-release_6.5-1+ubuntu22.04_all.deb"
 DEBIAN_REPO="https://repo.zabbix.com/zabbix/6.5/debian/pool/main/z/zabbix-release/zabbix-release_6.5-1+debian11_all.deb"
+DEBIAN12_REPO="https://repo.zabbix.com/zabbix/6.5/debian/pool/main/z/zabbix-release/zabbix-release_6.5-1+debian12_all.deb"
 PSK_FILE="/etc/zabbix/zabbix_agentd.psk"
 VERBOSE=0
 
@@ -70,6 +71,8 @@ if [ "$OS" == "ubuntu22.04" ]; then
     fi
 elif [ "$OS" == "debian11" ]; then
     ZABBIX_REPO=$DEBIAN_REPO
+elif [ "$OS" == "debian12" ]; then
+    ZABBIX_REPO=$DEBIAN12_REPO
 else
     print_message "Unsupported OS. Exiting." "error"
     exit 1
