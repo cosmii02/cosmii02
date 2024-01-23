@@ -15,6 +15,8 @@ RUN apt-get update \
         wget \
         curl \
         whiptail \
+        nano \
+        ca-certificates \
     # Clean up apt cache to reduce image size
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
