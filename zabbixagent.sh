@@ -60,24 +60,37 @@ while getopts "v" opt; do
 done
 
 # Determine system architecture
-ARCH=$(dpkg --print-architecture)
+if command -v dpkg &> /dev/null; then
+    ARCH=$(dpkg --print-architecture)
+else
+    ARCH=$(uname -m)
+    # Convert common arch names for consistency
+    case "$ARCH" in
+        x86_64)
+            ARCH="amd64"
+            ;;
+        aarch64)
+            ARCH="arm64"
+            ;;
+    esac
+fi
 
 # Determine the OS and set the Zabbix Repo accordingly
 OS=$(get_os)
-if [ "$OS" == "ubuntu24.04" ]; then
+if [[ "$OS" == ubuntu24.04* ]]; then
     if [ "$ARCH" == "amd64" ]; then
         ZABBIX_REPO=$ZABBIX_REPO_AMD64
     else
         ZABBIX_REPO=$ZABBIX_REPO_ARM64
     fi
-elif [ "$OS" == "debian12" ]; then
+elif [[ "$OS" == debian12* ]]; then
     ZABBIX_REPO=$DEBIAN12_REPO
-elif [ "$OS" == "rocky9" ]; then
+elif [[ "$OS" == rocky9* ]]; then
     ZABBIX_REPO=$ROCKY9_REPO
-elif [ "$OS" == "almalinux9" ]; then
+elif [[ "$OS" == almalinux9* ]]; then
     ZABBIX_REPO=$ALMA9_REPO
 else
-    print_message "Unsupported OS. Exiting." "error"
+    print_message "Unsupported OS: $OS. Exiting." "error"
     exit 1
 fi
 
@@ -121,7 +134,13 @@ disown
 
 # Step a: Install Zabbix release
 print_message "Downloading and installing Zabbix release for $ARCH..."
-if [ "$OS" == "rocky9" ] || [ "$OS" == "almalinux9" ]; then
+if [[ "$OS" == rocky9* ]] || [[ "$OS" == almalinux9* ]]; then
+    # For AlmaLinux, disable Zabbix packages from EPEL if installed
+    if [[ "$OS" == almalinux9* ]] && [ -f /etc/yum.repos.d/epel.repo ]; then
+        print_message "Disabling Zabbix packages from EPEL repository..."
+        execute sed -i '/^\[epel\]/a excludepkgs=zabbix*' /etc/yum.repos.d/epel.repo
+    fi
+    
     execute rpm -Uvh $ZABBIX_REPO \
         && execute dnf clean all || { print_message "Failed to install Zabbix release! Exiting." "error"; kill $ANIMATE_PID; exit 1; }
 else
@@ -132,7 +151,7 @@ fi
 
 # Step b: Install Zabbix agent
 print_message "Installing Zabbix agent..."
-if [ "$OS" == "rocky9" ] || [ "$OS" == "almalinux9" ]; then
+if [[ "$OS" == rocky9* ]] || [[ "$OS" == almalinux9* ]]; then
     execute dnf install -y zabbix-agent || { print_message "Failed to install Zabbix agent! Exiting." "error"; kill $ANIMATE_PID; exit 1; }
 else
     execute apt install -y zabbix-agent || { print_message "Failed to install Zabbix agent! Exiting." "error"; kill $ANIMATE_PID; exit 1; }
@@ -142,6 +161,11 @@ fi
 print_message "Configuring Zabbix agent..."
 execute sed -i "s/^Server=127.0.0.1/Server=$ZABBIX_SERVER_IP/" /etc/zabbix/zabbix_agentd.conf
 execute sed -i "s/^ServerActive=127.0.0.1/ServerActive=$ZABBIX_SERVER_IP/" /etc/zabbix/zabbix_agentd.conf
+
+# Configure hostname to use system hostname
+SYSTEM_HOSTNAME=$(hostname)
+execute sed -i "s/^# Hostname=/Hostname=$SYSTEM_HOSTNAME/" /etc/zabbix/zabbix_agentd.conf
+execute sed -i "s/^Hostname=Zabbix server/Hostname=$SYSTEM_HOSTNAME/" /etc/zabbix/zabbix_agentd.conf
 
 # Generating PSK and setting permissions
 print_message "Generating and configuring PSK..."
