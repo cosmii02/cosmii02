@@ -5,6 +5,22 @@ PSK_FILE="/etc/zabbix/zabbix_agentd.psk"
 ZABBIX_AGENT_CONF="/etc/zabbix/zabbix_agentd.conf"
 VERBOSE=0
 
+# Function to determine the OS
+get_os() {
+    . /etc/os-release
+    echo "$ID$VERSION_ID"
+}
+
+# Function to determine if OS is RHEL-based
+is_rhel_based() {
+    OS=$(get_os)
+    if [[ "$OS" == *"rocky"* ]] || [[ "$OS" == *"almalinux"* ]] || [[ "$OS" == *"centos"* ]] || [[ "$OS" == *"rhel"* ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 # Check for verbose flag
 while getopts "v" opt; do
   case $opt in
@@ -70,7 +86,12 @@ execute systemctl disable zabbix-agent
 
 # Step 3: Remove Zabbix agent package
 print_message "${GREEN}Removing Zabbix agent package...${NC}"
-execute apt remove --purge -y zabbix-agent
+if is_rhel_based; then
+    execute dnf remove -y zabbix-agent
+    execute dnf remove -y zabbix-release
+else
+    execute apt remove --purge -y zabbix-agent
+fi
 
 # Step 4: Remove PSK file
 if [ -f "$PSK_FILE" ]; then
@@ -86,8 +107,13 @@ fi
 
 # Step 6: Clean up downloaded packages
 print_message "${GREEN}Cleaning up downloaded packages...${NC}"
-execute apt autoremove -y
-execute apt autoclean -y
+if is_rhel_based; then
+    execute dnf autoremove -y
+    execute dnf clean all
+else
+    execute apt autoremove -y
+    execute apt autoclean -y
+fi
 
 # Kill the animation process and add a newline for formatting
 kill $ANIMATE_PID
