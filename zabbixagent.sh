@@ -4,10 +4,12 @@
 ZABBIX_REPO_AMD64="https://repo.zabbix.com/zabbix/7.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_latest_7.0+ubuntu24.04_all.deb"
 ZABBIX_REPO_ARM64="https://repo.zabbix.com/zabbix/7.0/ubuntu-arm64/pool/main/z/zabbix-release/zabbix-release_latest_7.0+ubuntu24.04_all.deb"
 DEBIAN12_REPO="https://repo.zabbix.com/zabbix/7.0/debian/pool/main/z/zabbix-release/zabbix-release_latest_7.0+debian12_all.deb"
+DEBIAN13_REPO="https://repo.zabbix.com/zabbix/7.0/debian/pool/main/z/zabbix-release/zabbix-release_latest_7.0+debian13_all.deb"
 ROCKY9_REPO="https://repo.zabbix.com/zabbix/7.0/rocky/9/x86_64/zabbix-release-latest-7.0.el9.noarch.rpm"
 ALMA9_REPO="https://repo.zabbix.com/zabbix/7.0/alma/9/x86_64/zabbix-release-latest-7.0.el9.noarch.rpm"
 PSK_FILE="/etc/zabbix/zabbix_agentd.psk"
 VERBOSE=0
+ANIMATE_PID=""
 
 # Colors for nice output and error messages
 RED='\033[0;31m'
@@ -24,43 +26,89 @@ print_message() {
     fi
 }
 
+# Simple spinner animation
+animate() {
+    local spin='|/-\'
+    local i=0
+    while true; do
+        i=$(( (i + 1) % 4 ))
+        printf "\r${YELLOW}Working... %s${NC}" "${spin:$i:1}"
+        sleep 0.1
+    done
+}
+
+# Stop spinner safely
+stop_animation() {
+    if [ -n "$ANIMATE_PID" ] && kill -0 "$ANIMATE_PID" 2>/dev/null; then
+        kill "$ANIMATE_PID" 2>/dev/null
+        wait "$ANIMATE_PID" 2>/dev/null
+        printf "\r\033[K"
+    fi
+}
+
+# Cleanup on exit
+cleanup() {
+    stop_animation
+}
+trap cleanup EXIT
+
 # Function to determine the OS
 get_os() {
     . /etc/os-release
     echo "$ID$VERSION_ID"
 }
 
-# Check if wget is installed
-if ! command -v wget &> /dev/null; then
+# Function to execute commands
+execute() {
+    if [ "$VERBOSE" -eq 1 ]; then
+        "$@"
+    else
+        "$@" > /dev/null 2>&1
+    fi
+}
+
+# Check if script is run as root
+if [ "$EUID" -ne 0 ]; then
+    print_message "ERROR: Please run this script as root." "error"
+    exit 1
+fi
+
+# Check if required commands are installed
+if ! command -v wget > /dev/null 2>&1; then
     print_message "ERROR: wget not installed" "error"
     exit 1
 fi
 
-# Ask the user for the Zabbix server IP
-echo -n "Please enter the Zabbix server IP: "
-read -r ZABBIX_SERVER_IP
-
-# Validate the input if needed (basic format check)
-if ! [[ $ZABBIX_SERVER_IP =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    print_message "Invalid IP format. Exiting." "error"
+if ! command -v openssl > /dev/null 2>&1; then
+    print_message "ERROR: openssl not installed" "error"
     exit 1
 fi
 
 # Check for verbose flag
 while getopts "v" opt; do
-  case $opt in
-    v)
-      VERBOSE=1
-      ;;
-    \?)
-      print_message "Invalid option: -$OPTARG" "error"
-      exit 1
-      ;;
-  esac
+    case $opt in
+        v)
+            VERBOSE=1
+            ;;
+        \?)
+            print_message "Invalid option: -$OPTARG" "error"
+            exit 1
+            ;;
+    esac
 done
 
+# Ask the user for the Zabbix server IP
+echo -n "Please enter the Zabbix server IP: "
+read -r ZABBIX_SERVER_IP
+
+# Validate the input
+if ! [[ $ZABBIX_SERVER_IP =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    print_message "Invalid IP format. Exiting." "error"
+    exit 1
+fi
+
 # Determine system architecture
-if command -v dpkg &> /dev/null; then
+if command -v dpkg > /dev/null 2>&1; then
     ARCH=$(dpkg --print-architecture)
 else
     ARCH=$(uname -m)
@@ -85,6 +133,8 @@ if [[ "$OS" == ubuntu24.04* ]]; then
     fi
 elif [[ "$OS" == debian12* ]]; then
     ZABBIX_REPO=$DEBIAN12_REPO
+elif [[ "$OS" == debian13* ]]; then
+    ZABBIX_REPO=$DEBIAN13_REPO
 elif [[ "$OS" == rocky9* ]]; then
     ZABBIX_REPO=$ROCKY9_REPO
 elif [[ "$OS" == almalinux9* ]]; then
@@ -93,15 +143,6 @@ else
     print_message "Unsupported OS: $OS. Exiting." "error"
     exit 1
 fi
-
-# Function to execute commands
-execute() {
-    if [ $VERBOSE -eq 1 ]; then
-        "$@"
-    else
-        "$@" > /dev/null 2>&1
-    fi
-}
 
 # Ask user for PSK preference
 echo ""
@@ -116,7 +157,7 @@ if [ "$PSK_CHOICE" == "2" ]; then
     read -r PSK_IDENTITY
     echo -n "Enter PSK Key (64-character hex string): "
     read -r PSK_KEY
-    
+
     # Basic validation for PSK key format
     if ! [[ $PSK_KEY =~ ^[0-9a-fA-F]{64}$ ]]; then
         print_message "Invalid PSK key format. Must be 64-character hex string. Exiting." "error"
@@ -124,13 +165,13 @@ if [ "$PSK_CHOICE" == "2" ]; then
     fi
 else
     # Generate a random 5-letter PSK identity
-    PSK_IDENTITY=$(cat /dev/urandom | tr -dc 'A-Za-z' | fold -w 5 | head -n 1)
+    PSK_IDENTITY=$(tr -dc 'A-Za-z' < /dev/urandom | head -c 5)
     PSK_KEY=""
 fi
 
 # Start animation
-animate & ANIMATE_PID=$!
-disown
+animate &
+ANIMATE_PID=$!
 
 # Step a: Install Zabbix release
 print_message "Downloading and installing Zabbix release for $ARCH..."
@@ -140,21 +181,25 @@ if [[ "$OS" == rocky9* ]] || [[ "$OS" == almalinux9* ]]; then
         print_message "Disabling Zabbix packages from EPEL repository..."
         execute sed -i '/^\[epel\]/a excludepkgs=zabbix*' /etc/yum.repos.d/epel.repo
     fi
-    
-    execute rpm -Uvh $ZABBIX_REPO \
-        && execute dnf clean all || { print_message "Failed to install Zabbix release! Exiting." "error"; kill $ANIMATE_PID; exit 1; }
+
+    execute rpm -Uvh "$ZABBIX_REPO" \
+        && execute dnf clean all \
+        || { print_message "Failed to install Zabbix release! Exiting." "error"; exit 1; }
 else
-    execute wget $ZABBIX_REPO \
-        && execute dpkg -i $(basename $ZABBIX_REPO) \
-        && execute apt update || { print_message "Failed to install Zabbix release! Exiting." "error"; kill $ANIMATE_PID; exit 1; }
+    execute wget -q "$ZABBIX_REPO" \
+        && execute dpkg -i "$(basename "$ZABBIX_REPO")" \
+        && execute apt update \
+        || { print_message "Failed to install Zabbix release! Exiting." "error"; exit 1; }
 fi
 
 # Step b: Install Zabbix agent
 print_message "Installing Zabbix agent..."
 if [[ "$OS" == rocky9* ]] || [[ "$OS" == almalinux9* ]]; then
-    execute dnf install -y zabbix-agent || { print_message "Failed to install Zabbix agent! Exiting." "error"; kill $ANIMATE_PID; exit 1; }
+    execute dnf install -y zabbix-agent \
+        || { print_message "Failed to install Zabbix agent! Exiting." "error"; exit 1; }
 else
-    execute apt install -y zabbix-agent || { print_message "Failed to install Zabbix agent! Exiting." "error"; kill $ANIMATE_PID; exit 1; }
+    execute apt install -y zabbix-agent \
+        || { print_message "Failed to install Zabbix agent! Exiting." "error"; exit 1; }
 fi
 
 # Configuring Zabbix agent
@@ -172,16 +217,19 @@ print_message "Generating and configuring PSK..."
 
 # Generate or use provided PSK
 if [ -n "$PSK_KEY" ]; then
-    echo "$PSK_KEY" > $PSK_FILE
+    echo "$PSK_KEY" > "$PSK_FILE"
 else
-    openssl rand -hex 32 > $PSK_FILE
+    openssl rand -hex 32 > "$PSK_FILE"
 fi
 
 if [ $? -ne 0 ]; then
     print_message "Failed to generate/write PSK to $PSK_FILE. Check permissions and path." "error"
     exit 1
 fi
-execute chmod 744 $PSK_FILE
+
+execute chmod 600 "$PSK_FILE"
+execute chown zabbix:zabbix "$PSK_FILE"
+
 execute sed -i "s|^# TLSConnect=unencrypted|TLSConnect=psk|" /etc/zabbix/zabbix_agentd.conf
 execute sed -i "s|^# TLSAccept=unencrypted|TLSAccept=psk|" /etc/zabbix/zabbix_agentd.conf
 execute sed -i "s|^# TLSPSKIdentity=|TLSPSKIdentity=$PSK_IDENTITY|" /etc/zabbix/zabbix_agentd.conf
@@ -190,19 +238,20 @@ execute sed -i "s|^# TLSPSKFile=|TLSPSKFile=$PSK_FILE|" /etc/zabbix/zabbix_agent
 # Step c: Start Zabbix agent process and enable at system boot
 print_message "Starting and enabling Zabbix agent..."
 execute systemctl restart zabbix-agent
-execute systemctl enable zabbix-agent || { print_message "Failed to start/enable Zabbix agent! Exiting." "error"; kill $ANIMATE_PID; exit 1; }
+execute systemctl enable zabbix-agent \
+    || { print_message "Failed to start/enable Zabbix agent! Exiting." "error"; exit 1; }
 
-# Kill the animation process and add a newline for formatting
-kill $ANIMATE_PID
+# Stop animation and print newline
+stop_animation
 echo ""
 
 # Check and print the PSK
 if [ -f "$PSK_FILE" ] && [ -r "$PSK_FILE" ]; then
-    PSK_CONTENT=$(cat $PSK_FILE)
+    PSK_CONTENT=$(cat "$PSK_FILE")
 else
     PSK_CONTENT="PSK file not found or not readable."
 fi
 
-# Print out the PSK Identity and PSK with color, always
+# Print out the PSK Identity and PSK
 echo -e "${GREEN}Your PSK Identity is: ${YELLOW}$PSK_IDENTITY${NC}"
 echo -e "${GREEN}Your PSK is: ${YELLOW}$PSK_CONTENT${NC}"
