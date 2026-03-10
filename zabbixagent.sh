@@ -6,6 +6,7 @@ ZABBIX_REPO_ARM64="https://repo.zabbix.com/zabbix/7.0/ubuntu-arm64/pool/main/z/z
 DEBIAN12_REPO="https://repo.zabbix.com/zabbix/7.0/debian/pool/main/z/zabbix-release/zabbix-release_latest_7.0+debian12_all.deb"
 DEBIAN13_REPO="https://repo.zabbix.com/zabbix/7.0/debian/pool/main/z/zabbix-release/zabbix-release_latest_7.0+debian13_all.deb"
 ROCKY9_REPO="https://repo.zabbix.com/zabbix/7.0/rocky/9/x86_64/zabbix-release-latest-7.0.el9.noarch.rpm"
+ROCKY10_REPO="https://repo.zabbix.com/zabbix/7.0/rocky/10/x86_64/zabbix-release-latest-7.0.el10.noarch.rpm"
 ALMA9_REPO="https://repo.zabbix.com/zabbix/7.0/alma/9/x86_64/zabbix-release-latest-7.0.el9.noarch.rpm"
 ALMA10_REPO="https://repo.zabbix.com/zabbix/7.0/alma/10/x86_64/zabbix-release-latest-7.0.el10.noarch.rpm"
 PSK_FILE="/etc/zabbix/zabbix_agentd.psk"
@@ -138,6 +139,8 @@ elif [[ "$OS" == debian13* ]]; then
     ZABBIX_REPO=$DEBIAN13_REPO
 elif [[ "$OS" == rocky9* ]]; then
     ZABBIX_REPO=$ROCKY9_REPO
+elif [[ "$OS" == rocky10* ]]; then
+    ZABBIX_REPO=$ROCKY10_REPO
 elif [[ "$OS" == almalinux9* ]]; then
     ZABBIX_REPO=$ALMA9_REPO
 elif [[ "$OS" == almalinux10* ]]; then
@@ -178,7 +181,7 @@ ANIMATE_PID=$!
 
 # Step a: Install Zabbix release
 print_message "Downloading and installing Zabbix release for $ARCH..."
-if [[ "$OS" == rocky9* ]] || [[ "$OS" == almalinux9* ]] || [[ "$OS" == almalinux10* ]]; then
+if [[ "$OS" == rocky9* ]] || [[ "$OS" == rocky10* ]] || [[ "$OS" == almalinux9* ]] || [[ "$OS" == almalinux10* ]]; then
     # For AlmaLinux, disable Zabbix packages from EPEL if installed
     if ([[ "$OS" == almalinux9* ]] || [[ "$OS" == almalinux10* ]]) && [ -f /etc/yum.repos.d/epel.repo ]; then
         print_message "Disabling Zabbix packages from EPEL repository..."
@@ -197,7 +200,7 @@ fi
 
 # Step b: Install Zabbix agent
 print_message "Installing Zabbix agent..."
-if [[ "$OS" == rocky9* ]] || [[ "$OS" == almalinux9* ]] || [[ "$OS" == almalinux10* ]]; then
+if [[ "$OS" == rocky9* ]] || [[ "$OS" == rocky10* ]] || [[ "$OS" == almalinux9* ]] || [[ "$OS" == almalinux10* ]]; then
     execute dnf install -y zabbix-agent \
         || { print_message "Failed to install Zabbix agent! Exiting." "error"; exit 1; }
 else
